@@ -1,22 +1,12 @@
 import { Tabs } from 'expo-router'
 import React from 'react'
-import { View } from 'react-native'
-
-import { HapticTab } from '@/components/HapticTab'
-import { IconSymbol } from '@/components/ui/IconSymbol'
-import TabBarBackground from '@/components/ui/TabBarBackground'
-import { Colors } from '@/constants/Colors'
-import { useColorScheme } from '@/hooks/useColorScheme'
+import { Image, View } from 'react-native'
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme()
-
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
-        // tabBarButton: HapticTab,
-        // tabBarBackground: TabBarBackground,
         tabBarStyle: {
           position: 'absolute',
           bottom: 20,
@@ -46,19 +36,18 @@ export default function TabLayout() {
                 padding: 12,
               }}
             >
-              <IconSymbol
-                size={24}
-                name="house.fill"
-                color={focused ? 'white' : 'black'}
+              <Image
+                source={require('@/assets/images/home_icon.png')}
+                style={{ width: 20, height: 20 }}
               />
             </View>
           ),
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="Buchung"
         options={{
-          title: 'Explore',
+          title: 'Buchung',
           tabBarIcon: ({ focused }) => (
             <View
               style={{
@@ -67,17 +56,16 @@ export default function TabLayout() {
                 padding: 12,
               }}
             >
-              <IconSymbol
-                size={24}
-                name="plus"
-                color={focused ? 'white' : 'black'}
+              <Image
+                source={require('@/assets/images/add_icon.png')}
+                style={{ width: 20, height: 20 }}
               />
             </View>
           ),
         }}
       />
       <Tabs.Screen
-        name="menu"
+        name="Menu"
         options={{
           title: 'Menu',
           tabBarIcon: ({ focused }) => (
@@ -88,10 +76,9 @@ export default function TabLayout() {
                 padding: 12,
               }}
             >
-              <IconSymbol
-                size={24}
-                name="line.3.horizontal"
-                color={focused ? 'white' : 'black'}
+              <Image
+                source={require('@/assets/images/menu_Icon.png')}
+                style={{ width: 18, height: 18 }}
               />
             </View>
           ),

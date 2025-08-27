@@ -25,7 +25,7 @@ const Menu = () => {
   const router = useRouter()
 
   const navigateTo = (path: string) => {
-    router.push(path)
+    router.push(path as any)
   }
 
   const renderItem = ({ item }: { item: (typeof MENU_ITEMS)[0] }) => (

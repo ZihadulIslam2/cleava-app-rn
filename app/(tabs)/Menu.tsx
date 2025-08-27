@@ -13,12 +13,12 @@ import {
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
 
 const MENU_ITEMS = [
-  { title: 'Ablauf', path: '/pages/explore' },
+  { title: 'Ablauf', path: '/pages/ablauf' },
   { title: 'FAQ', path: '/pages/faq' },
-  { title: 'Impressum', path: '/page3' },
-  { title: 'Datenschutz', path: '/page3' },
-  { title: 'Aktuelles', path: '/page3' },
-  { title: 'Buchung', path: '/page3' },
+  { title: 'Impressum', path: '/pages/impressum' },
+  { title: 'Datenschutz', path: '/pages/datenschutz' },
+  { title: 'Aktuelles', path: '/pages/aktuelles' },
+  { title: 'Buchung', path: '/pages' },
 ]
 
 const Menu = () => {

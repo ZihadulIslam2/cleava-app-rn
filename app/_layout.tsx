@@ -26,6 +26,14 @@ export default function RootLayout() {
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="pages/faq" options={{ headerShown: false }} />
+        <Stack.Screen name="pages/ablauf" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="pages/datenschutz"
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen name="pages/impressum" options={{ headerShown: false }} />
+        <Stack.Screen name="pages/aktuelles" options={{ headerShown: false }} />
+
         <Stack.Screen name="+not-found" />
       </Stack>
       <StatusBar style="auto" />

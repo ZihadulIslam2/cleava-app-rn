@@ -13,8 +13,8 @@ import {
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
 
 const MENU_ITEMS = [
-  { title: 'Ablauf', path: '/page1' },
-  { title: 'FAQ', path: '/page2' },
+  { title: 'Ablauf', path: '/pages/explore' },
+  { title: 'FAQ', path: '/pages/faq' },
   { title: 'Impressum', path: '/page3' },
   { title: 'Datenschutz', path: '/page3' },
   { title: 'Aktuelles', path: '/page3' },
@@ -54,15 +54,15 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     width: SCREEN_WIDTH / 2,
-    height: '100%',
+    height: '100%', // full height including tab bar
     backgroundColor: '#fff',
     padding: 20,
-    paddingTop: 30,
     shadowColor: '#000',
     shadowOpacity: 0.3,
     shadowOffset: { width: -2, height: 0 },
     shadowRadius: 10,
-    elevation: 10,
+    elevation: 20, // higher than tab bar
+    zIndex: 1000, // important for Android and iOS
   },
   menuTitle: {
     fontSize: 24,

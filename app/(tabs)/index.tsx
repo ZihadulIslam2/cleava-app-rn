@@ -1,4 +1,6 @@
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import {
+  Image,
   ImageBackground,
   ScrollView,
   StyleSheet,
@@ -13,6 +15,23 @@ export default function HomeScreen() {
       style={styles.container}
       contentContainerStyle={{ paddingBottom: 40 }}
     >
+      <View style={styles.header}>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          {/* name and logo  */}
+          <Image
+            style={{ width: 27, height: 23, marginRight: 10 }}
+            source={require('@/assets/images/Vector.png')}
+          ></Image>
+          <Text style={{ fontSize: 24, fontWeight: 'bold' }}>Cleava</Text>
+        </View>
+        {/* Notification Bell */}
+        <MaterialCommunityIcons
+          name="bell-ring-outline"
+          size={24}
+          color="black"
+        />
+      </View>
+
       {/* Header Banner */}
       <View style={styles.banner}>
         <ImageBackground
@@ -32,8 +51,6 @@ export default function HomeScreen() {
           </View>
         </ImageBackground>
       </View>
-
-      
 
       {/* Pricing Cards */}
       <View style={styles.card}>
@@ -89,6 +106,13 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 20,
+    paddingHorizontal: 16,
+  },
   banner: {
     borderRadius: 12,
     overflow: 'hidden',
@@ -142,27 +166,27 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
 
-  bannerTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 6,
-  },
-  bannerText: {
-    fontSize: 14,
-    color: '#333',
-    marginBottom: 12,
-  },
-  bannerButton: {
-    backgroundColor: '#111',
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-    borderRadius: 8,
-    alignSelf: 'flex-start',
-  },
-  bannerButtonText: {
-    color: '#fff',
-    fontWeight: '600',
-  },
+  // bannerTitle: {
+  //   fontSize: 18,
+  //   fontWeight: 'bold',
+  //   marginBottom: 6,
+  // },
+  // bannerText: {
+  //   fontSize: 14,
+  //   color: '#333',
+  //   marginBottom: 12,
+  // },
+  // bannerButton: {
+  //   backgroundColor: '#111',
+  //   paddingVertical: 10,
+  //   paddingHorizontal: 16,
+  //   borderRadius: 8,
+  //   alignSelf: 'flex-start',
+  // },
+  // bannerButtonText: {
+  //   color: '#fff',
+  //   fontWeight: '600',
+  // },
   bannerImage: {
     width: 100,
     height: 100,

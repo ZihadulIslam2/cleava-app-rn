@@ -52,6 +52,97 @@ export default function HomeScreen() {
         </ImageBackground>
       </View>
 
+      {/* <View style={{ marginBottom: 20 }}>
+        <Text style={{ fontSize: 20, fontWeight: 'bold', paddingVertical: 10 }}>
+          Unser Haushaltshilfe-Service für anspruchsvolle Kunden
+        </Text>
+        <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Kompetenz</Text>
+        <Text>
+          Reinigung mit Fachpersonal Erfahrung in der Hotelreinigung Einsatz
+          geprüfter Reinigungsmittel
+        </Text>
+        <Text style={{ fontSize: 16, fontWeight: 'bold', paddingTop: 10 }}>Qualität</Text>
+        <Text>
+          Regelmäßige Gütekontrollen Zertifiziertes Qualitätsmanagement
+          Zertifiziertes Umweltmanagement
+        </Text>
+        <Text style={{ fontSize: 16, fontWeight: 'bold', paddingTop: 10 }}>Sicherheit</Text>
+        <Text>
+          Vertrauenswürdige Mitarbeiter mit polizeilichem Führungszeugnis und
+          Gesundheitspass Voller Versicherungsschutz Keine Vertragsbindung
+        </Text>
+      </View> */}
+
+      <View style={{ marginBottom: 20, paddingHorizontal: 15 }}>
+        <Text style={{ fontSize: 20, fontWeight: 'bold', paddingVertical: 10 }}>
+          Unser Haushaltshilfe-Service für anspruchsvolle Kunden
+        </Text>
+
+        {/* Kompetenz */}
+        <Text
+          style={{
+            fontSize: 16,
+            fontWeight: 'bold',
+            paddingTop: 12,
+            paddingBottom: 4,
+          }}
+        >
+          Kompetenz
+        </Text>
+        <Text style={{ fontSize: 14, lineHeight: 22, paddingLeft: 10 }}>
+          • Reinigung mit Fachpersonal
+        </Text>
+        <Text style={{ fontSize: 14, lineHeight: 22, paddingLeft: 10 }}>
+          • Erfahrung in der Hotelreinigung
+        </Text>
+        <Text style={{ fontSize: 14, lineHeight: 22, paddingLeft: 10 }}>
+          • Einsatz geprüfter Reinigungsmittel
+        </Text>
+
+        {/* Qualität */}
+        <Text
+          style={{
+            fontSize: 16,
+            fontWeight: 'bold',
+            paddingTop: 12,
+            paddingBottom: 4,
+          }}
+        >
+          Qualität
+        </Text>
+        <Text style={{ fontSize: 14, lineHeight: 22, paddingLeft: 10 }}>
+          • Regelmäßige Gütekontrollen
+        </Text>
+        <Text style={{ fontSize: 14, lineHeight: 22, paddingLeft: 10 }}>
+          • Zertifiziertes Qualitätsmanagement
+        </Text>
+        <Text style={{ fontSize: 14, lineHeight: 22, paddingLeft: 10 }}>
+          • Zertifiziertes Umweltmanagement
+        </Text>
+
+        {/* Sicherheit */}
+        <Text
+          style={{
+            fontSize: 16,
+            fontWeight: 'bold',
+            paddingTop: 12,
+            paddingBottom: 4,
+          }}
+        >
+          Sicherheit
+        </Text>
+        <Text style={{ fontSize: 14, lineHeight: 22, paddingLeft: 10 }}>
+          • Vertrauenswürdige Mitarbeiter mit polizeilichem Führungszeugnis und
+          Gesundheitspass
+        </Text>
+        <Text style={{ fontSize: 14, lineHeight: 22, paddingLeft: 10 }}>
+          • Voller Versicherungsschutz
+        </Text>
+        <Text style={{ fontSize: 14, lineHeight: 22, paddingLeft: 10 }}>
+          • Keine Vertragsbindung
+        </Text>
+      </View>
+
       {/* Pricing Cards */}
       <View style={styles.card}>
         <View style={styles.cardHeader}>
@@ -100,6 +191,18 @@ export default function HomeScreen() {
         <TouchableOpacity style={styles.cardButton}>
           <Text style={styles.cardButtonText}>Make a request</Text>
         </TouchableOpacity>
+      </View>
+
+      <View style={{ paddingVertical: 36, paddingHorizontal: 16 }}>
+        <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
+          Das sagen unsere zufriedenen Kunden
+        </Text>
+        <Text style={{ fontSize: 16, marginTop: 10, paddingVertical: 16 }}>
+          Wir wollten uns bei Ihnen und Ihrer Mitarbeiterin sehr herzlich für
+          die Reinigungsarbeit bedanken. Ihre Mitarbeiterin hat eine exzellente
+          Arbeit geleistet und wir sind hochzufrieden. Sie haben ein
+          ausgezeichnetes Personal.
+        </Text>
       </View>
     </ScrollView>
   )

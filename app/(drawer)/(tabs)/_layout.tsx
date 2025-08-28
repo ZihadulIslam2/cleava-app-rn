@@ -54,7 +54,7 @@ export default function TabLayout() {
       })}
     >
       <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Buchung" component={BuchungScreen} />
+      <Tab.Screen name="Buchung" component={BuchungScreen}  />
       <Tab.Screen
         name="Menu"
         component={MenuPlaceholder}

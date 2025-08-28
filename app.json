@@ -9,7 +9,8 @@
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.sozib69.cleavaapprn"
     },
     "android": {
       "adaptiveIcon": {
@@ -42,7 +43,7 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "0520f087-9cd3-47d7-8889-0e452b289051"
+        "projectId": "fd880cc0-7b45-4d73-9535-8b84bce73a6a"
       }
     }
   }

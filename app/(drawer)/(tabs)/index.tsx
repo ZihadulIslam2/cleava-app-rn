@@ -187,12 +187,12 @@ export default function HomeScreen() {
           ))}
         </View>
 
-        <View style={{ paddingVertical: 36, paddingHorizontal: 16 }}>
+        <View style={{ paddingTop: 36, paddingHorizontal: 16 }}>
           <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
             Das sagen unsere zufriedenen Kunden
           </Text>
           <Image source={require('@/assets/images/E1.svg')} />
-          <Text style={{ fontSize: 16, marginTop: 10, paddingVertical: 16 }}>
+          <Text style={{ fontSize: 16, marginTop: 10, paddingTop: 16 }}>
             ❝ Wir wollten uns bei Ihnen und Ihrer Mitarbeiterin sehr herzlich
             für die Reinigungsarbeit bedanken. Ihre Mitarbeiterin hat eine
             exzellente Arbeit geleistet und wir sind hochzufrieden. Sie haben

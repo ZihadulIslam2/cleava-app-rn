@@ -12,7 +12,7 @@ export default function DrawerLayout() {
       <Drawer.Screen
         name="(tabs)"
         options={{
-          title: "Home",
+          // title: "Home",
           drawerIcon: ({ color, size }) => (
             <Ionicons name="home-outline" size={size} color={color} />
           ),

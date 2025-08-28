@@ -1,4 +1,3 @@
-// screens/BuchungScreen.tsx
 import Header from "@/components/Header";
 import PackageOption from "@/components/PackageOption";
 import RadioOption from "@/components/RadioOption";
@@ -15,7 +14,11 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-} from "react-native";
+  Platform,
+} from 'react-native'
+import DateTimePicker from '@react-native-community/datetimepicker'
+
+
 
 // Define Address type to fix the TypeScript error
 type Address = {
@@ -160,51 +163,149 @@ const Step2 = ({
   </ScrollView>
 );
 
+// const Step3_DateTime = ({
+//   bookingData,
+//   updateNested,
+//   prevStep,
+//   nextStep,
+// }: {
+//   bookingData: BookingData;
+//   updateNested: (parent: keyof BookingData, field: string, value: any) => void;
+//   prevStep: () => void;
+//   nextStep: () => void;
+// }) => (
+
+//   <ScrollView
+//     style={styles.scrollView}
+//     contentContainerStyle={{ paddingBottom: 40 }}
+//   >
+//     <View style={styles.container}>
+//       <Text style={styles.sectionTitle}>Bevorzugter Termin</Text>
+//       <Text style={styles.inputLabel}>
+//         Bevorzugtes Datum (z. B. 2025-12-10)
+//       </Text>
+//       <TextInput
+//         style={styles.textInput}
+//         placeholder="YYYY-MM-DD"
+//         value={bookingData.appointment.preferredDate || ""}
+//         onChangeText={(v) => updateNested("appointment", "preferredDate", v)}
+//       />
+//       <Text style={styles.inputLabel}>Bevorzugte Uhrzeit (z. B. 11:00)</Text>
+//       <TextInput
+//         style={styles.textInput}
+//         placeholder="HH:mm"
+//         value={bookingData.appointment.preferredTime || ""}
+//         onChangeText={(v) => updateNested("appointment", "preferredTime", v)}
+//       />
+
+//       <View style={styles.buttonRow}>
+//         <TouchableOpacity style={styles.secondaryButton} onPress={prevStep}>
+//           <Text style={styles.secondaryButtonText}>Zurück</Text>
+//         </TouchableOpacity>
+//         <TouchableOpacity style={styles.primaryButton} onPress={nextStep}>
+//           <Text style={styles.primaryButtonText}>Weiter</Text>
+//         </TouchableOpacity>
+//       </View>
+//     </View>
+//   </ScrollView>
+// );
+
 const Step3_DateTime = ({
   bookingData,
   updateNested,
   prevStep,
   nextStep,
 }: {
-  bookingData: BookingData;
-  updateNested: (parent: keyof BookingData, field: string, value: any) => void;
-  prevStep: () => void;
-  nextStep: () => void;
-}) => (
-  <ScrollView
-    style={styles.scrollView}
-    contentContainerStyle={{ paddingBottom: 40 }}
-  >
-    <View style={styles.container}>
-      <Text style={styles.sectionTitle}>Bevorzugter Termin</Text>
-      <Text style={styles.inputLabel}>
-        Bevorzugtes Datum (z. B. 2025-12-10)
-      </Text>
-      <TextInput
-        style={styles.textInput}
-        placeholder="YYYY-MM-DD"
-        value={bookingData.appointment.preferredDate || ""}
-        onChangeText={(v) => updateNested("appointment", "preferredDate", v)}
-      />
-      <Text style={styles.inputLabel}>Bevorzugte Uhrzeit (z. B. 11:00)</Text>
-      <TextInput
-        style={styles.textInput}
-        placeholder="HH:mm"
-        value={bookingData.appointment.preferredTime || ""}
-        onChangeText={(v) => updateNested("appointment", "preferredTime", v)}
-      />
+  bookingData: BookingData
+  updateNested: (parent: keyof BookingData, field: string, value: any) => void
+  prevStep: () => void
+  nextStep: () => void
+}) => {
+  const [showDatePicker, setShowDatePicker] = useState(false)
+  const [showTimePicker, setShowTimePicker] = useState(false)
 
-      <View style={styles.buttonRow}>
-        <TouchableOpacity style={styles.secondaryButton} onPress={prevStep}>
-          <Text style={styles.secondaryButtonText}>Zurück</Text>
+  const onDateChange = (_: any, selectedDate?: Date) => {
+    setShowDatePicker(false)
+    if (selectedDate) {
+      const formatted = selectedDate.toISOString().split('T')[0] // YYYY-MM-DD
+      updateNested('appointment', 'preferredDate', formatted)
+    }
+  }
+
+  const onTimeChange = (_: any, selectedTime?: Date) => {
+    setShowTimePicker(false)
+    if (selectedTime) {
+      const hh = String(selectedTime.getHours()).padStart(2, '0')
+      const mm = String(selectedTime.getMinutes()).padStart(2, '0')
+      updateNested('appointment', 'preferredTime', `${hh}:${mm}`)
+    }
+  }
+
+  return (
+    <ScrollView
+      style={styles.scrollView}
+      contentContainerStyle={{ paddingBottom: 40 }}
+    >
+      <View style={styles.container}>
+        <Text style={styles.sectionTitle}>Bevorzugter Termin</Text>
+
+        {/* Date Picker */}
+        <Text style={styles.inputLabel}>Bevorzugtes Datum</Text>
+        <TouchableOpacity
+          style={styles.textInput}
+          onPress={() => setShowDatePicker(true)}
+        >
+          <Text>
+            {bookingData.appointment.preferredDate || 'YYYY-MM-DD auswählen'}
+          </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.primaryButton} onPress={nextStep}>
-          <Text style={styles.primaryButtonText}>Weiter</Text>
+        {showDatePicker && (
+          <DateTimePicker
+            value={
+              bookingData.appointment.preferredDate
+                ? new Date(bookingData.appointment.preferredDate)
+                : new Date()
+            }
+            mode="date"
+            display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+            onChange={onDateChange}
+          />
+        )}
+
+        {/* Time Picker */}
+        <Text style={styles.inputLabel}>Bevorzugte Uhrzeit</Text>
+        <TouchableOpacity
+          style={styles.textInput}
+          onPress={() => setShowTimePicker(true)}
+        >
+          <Text>
+            {bookingData.appointment.preferredTime || 'HH:mm auswählen'}
+          </Text>
         </TouchableOpacity>
+        {showTimePicker && (
+          <DateTimePicker
+            value={new Date()}
+            mode="time"
+            is24Hour={true}
+            display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+            onChange={onTimeChange}
+          />
+        )}
+
+        {/* Navigation Buttons */}
+        <View style={styles.buttonRow}>
+          <TouchableOpacity style={styles.secondaryButton} onPress={prevStep}>
+            <Text style={styles.secondaryButtonText}>Zurück</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.primaryButton} onPress={nextStep}>
+            <Text style={styles.primaryButtonText}>Weiter</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
-  </ScrollView>
-);
+    </ScrollView>
+  )
+}
+
 
 const Step4_Personal = ({
   bookingData,

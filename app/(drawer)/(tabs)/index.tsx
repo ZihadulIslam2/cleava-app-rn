@@ -1,15 +1,15 @@
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons'
+import { useNavigation } from '@react-navigation/native'
 import {
-  View,
-  Text,
-  SafeAreaView,
-  TouchableOpacity,
-  ScrollView,
   Image,
   ImageBackground,
+  SafeAreaView,
+  ScrollView,
   StyleSheet,
-} from 'react-native';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 
 const servicePackages = [
   {
@@ -41,10 +41,10 @@ const servicePackages = [
       'Bügelservice',
     ],
   },
-];
+]
 
 export default function HomeScreen() {
-  const navigation = useNavigation();
+  const navigation = useNavigation()
 
   return (
     <SafeAreaView style={styles.container}>
@@ -57,7 +57,11 @@ export default function HomeScreen() {
           />
           <Text style={{ fontSize: 24, fontWeight: 'bold' }}>Cleava</Text>
         </View>
-        <MaterialCommunityIcons name="bell-ring-outline" size={24} color="black" />
+        <MaterialCommunityIcons
+          name="bell-ring-outline"
+          size={24}
+          color="black"
+        />
       </View>
 
       <ScrollView contentContainerStyle={{ paddingBottom: 60 }}>
@@ -70,8 +74,8 @@ export default function HomeScreen() {
           >
             <Text style={styles.bannerTitle}>Apartment cleaning service</Text>
             <Text style={styles.bannerText}>
-              Let us clean! We take care of cleaning your apartment professionally, 
-              so you&apos;ll have more time.
+              Let us clean! We take care of cleaning your apartment
+              professionally, so you&apos;ll have more time.
             </Text>
             <TouchableOpacity
               onPress={() => navigation.navigate('Buchung' as never)}
@@ -80,6 +84,78 @@ export default function HomeScreen() {
               <Text style={styles.bannerButtonText}>Make a request</Text>
             </TouchableOpacity>
           </ImageBackground>
+        </View>
+
+        <View style={{ marginBottom: 20, paddingHorizontal: 15 }}>
+          <Text
+            style={{ fontSize: 20, fontWeight: 'bold', paddingVertical: 10 }}
+          >
+            Unser Haushaltshilfe-Service für anspruchsvolle Kunden
+          </Text>
+
+          {/* Kompetenz */}
+          <Text
+            style={{
+              fontSize: 16,
+              fontWeight: 'bold',
+              paddingTop: 12,
+              paddingBottom: 4,
+            }}
+          >
+            Kompetenz
+          </Text>
+          <Text style={{ fontSize: 14, lineHeight: 22, paddingLeft: 10 }}>
+            • Reinigung mit Fachpersonal
+          </Text>
+          <Text style={{ fontSize: 14, lineHeight: 22, paddingLeft: 10 }}>
+            • Erfahrung in der Hotelreinigung
+          </Text>
+          <Text style={{ fontSize: 14, lineHeight: 22, paddingLeft: 10 }}>
+            • Einsatz geprüfter Reinigungsmittel
+          </Text>
+
+          {/* Qualität */}
+          <Text
+            style={{
+              fontSize: 16,
+              fontWeight: 'bold',
+              paddingTop: 12,
+              paddingBottom: 4,
+            }}
+          >
+            Qualität
+          </Text>
+          <Text style={{ fontSize: 14, lineHeight: 22, paddingLeft: 10 }}>
+            • Regelmäßige Gütekontrollen
+          </Text>
+          <Text style={{ fontSize: 14, lineHeight: 22, paddingLeft: 10 }}>
+            • Zertifiziertes Qualitätsmanagement
+          </Text>
+          <Text style={{ fontSize: 14, lineHeight: 22, paddingLeft: 10 }}>
+            • Zertifiziertes Umweltmanagement
+          </Text>
+
+          {/* Sicherheit */}
+          <Text
+            style={{
+              fontSize: 16,
+              fontWeight: 'bold',
+              paddingTop: 12,
+              paddingBottom: 4,
+            }}
+          >
+            Sicherheit
+          </Text>
+          <Text style={{ fontSize: 14, lineHeight: 22, paddingLeft: 10 }}>
+            • Vertrauenswürdige Mitarbeiter mit polizeilichem Führungszeugnis
+            und Gesundheitspass
+          </Text>
+          <Text style={{ fontSize: 14, lineHeight: 22, paddingLeft: 10 }}>
+            • Voller Versicherungsschutz
+          </Text>
+          <Text style={{ fontSize: 14, lineHeight: 22, paddingLeft: 10 }}>
+            • Keine Vertragsbindung
+          </Text>
         </View>
 
         {/* Service Packages */}
@@ -110,9 +186,22 @@ export default function HomeScreen() {
             </View>
           ))}
         </View>
+
+        <View style={{ paddingVertical: 36, paddingHorizontal: 16 }}>
+          <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
+            Das sagen unsere zufriedenen Kunden
+          </Text>
+          <Image source={require('@/assets/images/E1.svg')} />
+          <Text style={{ fontSize: 16, marginTop: 10, paddingVertical: 16 }}>
+            ❝ Wir wollten uns bei Ihnen und Ihrer Mitarbeiterin sehr herzlich
+            für die Reinigungsarbeit bedanken. Ihre Mitarbeiterin hat eine
+            exzellente Arbeit geleistet und wir sind hochzufrieden. Sie haben
+            ein ausgezeichnetes Personal.❞
+          </Text>
+        </View>
       </ScrollView>
     </SafeAreaView>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -123,6 +212,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 20,
     alignItems: 'center',
+    marginTop: 20,
   },
   banner: {
     borderRadius: 12,
@@ -157,7 +247,11 @@ const styles = StyleSheet.create({
   cardTitle: { fontSize: 16, fontWeight: 'bold' },
   cardSubtitle: { fontSize: 13, color: '#444' },
   cardPrice: { fontSize: 18, fontWeight: 'bold' },
-  serviceItem: { flexDirection: 'row', alignItems: 'center', marginVertical: 4 },
+  serviceItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 4,
+  },
   serviceText: { marginLeft: 8, fontSize: 14 },
   cardButton: {
     marginTop: 12,
@@ -167,4 +261,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   cardButtonText: { color: '#fff', fontWeight: '600' },
-});
+})

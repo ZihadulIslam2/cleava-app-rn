@@ -1,11 +1,19 @@
-import { Ionicons } from "@expo/vector-icons";
-import { Drawer } from "expo-router/drawer";
+import { Ionicons } from '@expo/vector-icons'
+import { Drawer } from 'expo-router/drawer'
 
 export default function DrawerLayout() {
   return (
     <Drawer
       screenOptions={{
         headerShown: false, // Hide headers globally if desired
+        drawerPosition: 'right',
+        drawerStyle: {
+          width: '50%',
+        },
+        drawerLabelStyle: {
+          fontWeight: 'bold', // make drawer text bold
+          fontSize: 20,
+        },
       }}
     >
       {/* Main Tabs (nested tab navigator) */}
@@ -21,30 +29,12 @@ export default function DrawerLayout() {
       />
 
       {/* Other drawer screens */}
-      <Drawer.Screen
-        name="Ablauf"
-        options={{ title: "Ablauf" }}
-      />
-      <Drawer.Screen
-        name="FAQ"
-        options={{ title: "FAQ" }}
-      />
-      <Drawer.Screen
-        name="Impressum"
-        options={{ title: "Impressum" }}
-      />
-      <Drawer.Screen
-        name="Datenschutz"
-        options={{ title: "Datenschutz" }}
-      />
-      <Drawer.Screen
-        name="Aktuelles"
-        options={{ title: "Aktuelles" }}
-      />
-      <Drawer.Screen
-        name="BuchungDrawer"
-        options={{ title: "Buchung" }}
-      />
+      <Drawer.Screen name="Ablauf" options={{ title: 'Ablauf' }} />
+      <Drawer.Screen name="FAQ" options={{ title: 'FAQ' }} />
+      <Drawer.Screen name="Impressum" options={{ title: 'Impressum' }} />
+      <Drawer.Screen name="Datenschutz" options={{ title: 'Datenschutz' }} />
+      <Drawer.Screen name="Aktuelles" options={{ title: 'Aktuelles' }} />
+      <Drawer.Screen name="BuchungDrawer" options={{ title: 'Buchung' }} />
     </Drawer>
-  );
+  )
 }

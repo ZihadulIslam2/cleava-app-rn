@@ -36,87 +36,87 @@ const Step1 = ({
   updateField: (field: keyof BookingData, value: any) => void
   nextStep: () => void
 }) => (
-    <ScrollView
-      style={styles.scrollView}
-      contentContainerStyle={{ paddingBottom: 40 }}
-    >
-      <View style={styles.container}>
-        <Text style={styles.sectionTitle}>Reinigung</Text>
-        <Text style={styles.description}>
-          Die benötigte Zeit zum Reinigen Ihres Appartements orientiert sich an
-          Ihrer Wohnfläche.
-        </Text>
+  <ScrollView
+    style={styles.scrollView}
+    contentContainerStyle={{ paddingBottom: 40 }}
+  >
+    <View style={styles.container}>
+      <Text style={styles.sectionTitle}>Reinigung</Text>
+      <Text style={styles.description}>
+        Die benötigte Zeit zum Reinigen Ihres Appartements orientiert sich an
+        Ihrer Wohnfläche.
+      </Text>
 
-        <Text style={styles.inputLabel}>Appartement-Größe</Text>
-        <TextInput
-          style={styles.textInput}
-          placeholder="Wohnungsgröße"
-          value={bookingData.apartmentSize}
-          onChangeText={(v) => updateField('apartmentSize', v)}
-        />
+      <Text style={styles.inputLabel}>Appartement-Größe</Text>
+      <TextInput
+        style={styles.textInput}
+        placeholder="Wohnungsgröße"
+        value={bookingData.apartmentSize}
+        onChangeText={(v) => updateField('apartmentSize', v)}
+      />
 
-        <Text style={styles.inputLabel}>Reinigungsintervall</Text>
-        <TextInput
-          style={styles.textInput}
-          placeholder="z. B. 1x/Woche"
-          value={bookingData.cleaningInterval}
-          onChangeText={(v) => updateField('cleaningInterval', v)}
-        />
+      <Text style={styles.inputLabel}>Reinigungsintervall</Text>
+      <TextInput
+        style={styles.textInput}
+        placeholder="z. B. 1x/Woche"
+        value={bookingData.cleaningInterval}
+        onChangeText={(v) => updateField('cleaningInterval', v)}
+      />
 
-        <Text style={styles.inputLabel}>Anzahl Personen</Text>
-        <TextInput
-          style={styles.textInput}
-          placeholder="Anzahl Personen"
-          keyboardType="numeric"
-          value={bookingData.householdSize}
-          onChangeText={(v) => updateField('householdSize', v)}
-        />
+      <Text style={styles.inputLabel}>Anzahl Personen</Text>
+      <TextInput
+        style={styles.textInput}
+        placeholder="Anzahl Personen"
+        keyboardType="numeric"
+        value={bookingData.householdSize}
+        onChangeText={(v) => updateField('householdSize', v)}
+      />
 
-        <Text style={styles.sectionTitle}>Cleaning Service Paket</Text>
-        <PackageOption
-          title="Executive Cleaning Service"
-          items={[
-            'Reinigung Schlafzimmer',
-            'Betten aufbereiten',
-            'Reinigung Wohnbereich',
-            'Reinigung Küche',
-            'Reinigung Bad (desinfizierend)',
-            'Bereitstellung Reinigungsmittel',
-          ]}
-          selected={bookingData.cleaningPackage === 'executive'}
-          onPress={() => updateField('cleaningPackage', 'executive')}
-        />
-        <PackageOption
-          title="CEO Cleaning Service"
-          items={[
-            'Reinigung Schlafzimmer',
-            'Betten aufbereiten',
-            'Reinigung Wohnbereich',
-            'Reinigung Küche',
-            'Reinigung Bad (desinfizierend)',
-            'Bereitstellung Reinigungsmittel',
-            'Bereitstellung Verbrauchsartikel',
-            'Geschirr spülen',
-            'Bügelservice',
-          ]}
-          selected={bookingData.cleaningPackage === 'ceo'}
-          onPress={() => updateField('cleaningPackage', 'ceo')}
-        />
+      <Text style={styles.sectionTitle}>Cleaning Service Paket</Text>
+      <PackageOption
+        title="Executive Cleaning Service"
+        items={[
+          'Reinigung Schlafzimmer',
+          'Betten aufbereiten',
+          'Reinigung Wohnbereich',
+          'Reinigung Küche',
+          'Reinigung Bad (desinfizierend)',
+          'Bereitstellung Reinigungsmittel',
+        ]}
+        selected={bookingData.cleaningPackage === 'executive'}
+        onPress={() => updateField('cleaningPackage', 'executive')}
+      />
+      <PackageOption
+        title="CEO Cleaning Service"
+        items={[
+          'Reinigung Schlafzimmer',
+          'Betten aufbereiten',
+          'Reinigung Wohnbereich',
+          'Reinigung Küche',
+          'Reinigung Bad (desinfizierend)',
+          'Bereitstellung Reinigungsmittel',
+          'Bereitstellung Verbrauchsartikel',
+          'Geschirr spülen',
+          'Bügelservice',
+        ]}
+        selected={bookingData.cleaningPackage === 'ceo'}
+        onPress={() => updateField('cleaningPackage', 'ceo')}
+      />
 
-        <Text style={styles.inputLabel}>Besondere Wünsche</Text>
-        <TextInput
-          style={[styles.textInput, { height: 90 }]}
-          placeholder="Schreiben Sie hier..."
-          multiline
-          value={bookingData.specialWish}
-          onChangeText={(v) => updateField('specialWish', v)}
-        />
+      <Text style={styles.inputLabel}>Besondere Wünsche</Text>
+      <TextInput
+        style={[styles.textInput, { height: 90 }]}
+        placeholder="Schreiben Sie hier..."
+        multiline
+        value={bookingData.specialWish}
+        onChangeText={(v) => updateField('specialWish', v)}
+      />
 
-        <TouchableOpacity style={styles.primaryButton} onPress={nextStep}>
-          <Text style={styles.primaryButtonText}>Bestätigen</Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+      <TouchableOpacity style={styles.primaryButton} onPress={nextStep}>
+        <Text style={styles.primaryButtonText}>Bestätigen</Text>
+      </TouchableOpacity>
+    </View>
+  </ScrollView>
 )
 
 const Step2 = ({
@@ -665,12 +665,34 @@ export default function BuchungScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
+      {/* {currentStep < 6 && (
+        <Header
+          title="Buchungsanfrage"
+          // onBack={() => (currentStep === 1 ? navigation.goBack() : prevStep())}
+
+          onBack={() => {
+            if (currentStep === 1) {
+              navigation.goBack()
+            } else {
+              prevStep()
+            }
+          }}
+        />
+      )} */}
+
       {currentStep < 6 && (
         <Header
           title="Buchungsanfrage"
-          onBack={() => (currentStep === 1 ? navigation.goBack() : prevStep())}
+          onBack={() => {
+            if (currentStep === 1) {
+              navigation.goBack()
+            } else {
+              prevStep()
+            }
+          }}
         />
       )}
+
       {renderStep()}
     </SafeAreaView>
   )

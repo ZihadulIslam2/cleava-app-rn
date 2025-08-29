@@ -20,17 +20,6 @@ export default function Header({ title, onBack }: Props) {
   )
 }
 
-// export default function Header({ title, onBack }: Props) {
-//   return (
-//     <View style={styles.header}>
-//       <TouchableOpacity onPress={onBack}>
-//         <Ionicons name="arrow-back" size={24} color="black" />
-//       </TouchableOpacity>
-//       <Text style={styles.title}>{title || ""}</Text>
-//       <View style={{ width: 24 }} /> {/* placeholder to center title */}
-//     </View>
-//   );
-// }
 
 const styles = StyleSheet.create({
   header: {
@@ -40,6 +29,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     backgroundColor: '#fff',
     justifyContent: 'space-between',
+    paddingTop: 40,
   },
   title: { fontSize: 18, fontWeight: '600', color: '#000' },
 })

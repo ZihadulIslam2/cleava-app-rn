@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.tabActive,
     borderRadius: 30,
     borderTopWidth: 0,
-    bottom: 30,
+    bottom: 60,
     width: "80%",
     justifyContent: "center",
     alignSelf: "center",

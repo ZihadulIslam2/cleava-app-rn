@@ -43,8 +43,9 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "fd880cc0-7b45-4d73-9535-8b84bce73a6a"
+        "projectId": "0520f087-9cd3-47d7-8889-0e452b289051"
       }
-    }
+    },
+    "owner": "sozib69"
   }
 }

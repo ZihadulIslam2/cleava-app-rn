@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#ffffff',
-    paddingVertical: 30,
+    paddingVertical: 40,
   },
   statusBar: {
     flexDirection: 'row',

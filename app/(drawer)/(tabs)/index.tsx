@@ -205,14 +205,14 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#fff' },
+  container: { flex: 1, backgroundColor: '#fff', marginBottom: 20 },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
     paddingVertical: 20,
     alignItems: 'center',
-    marginTop: 20,
+    marginTop: 30,
   },
   banner: {
     borderRadius: 12,

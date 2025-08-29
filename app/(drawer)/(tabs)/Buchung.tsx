@@ -69,7 +69,9 @@ const Step1 = ({
         <Text style={styles.inputLabel}>
           AppClean ist in folgenden Städten verfügbar:
         </Text>
-        <Text>Berlin, Frankfurt, Hamburg, München, Nürnberg, Stuttgart</Text>
+        <Text style={styles.inputLabel}>
+          Berlin, Frankfurt, Hamburg, München, Nürnberg, Stuttgart
+        </Text>
 
         <Text style={styles.sectionTitle}>
           Appartement und Reinigungsintervall
@@ -279,7 +281,7 @@ const Step3_DateTime = ({
             ]}
             onPress={() => setShowDatePicker(true)}
           >
-            <Text>
+            <Text style={{ color: 'gray' }}>
               {bookingData.appointment.preferredDate || 'YYYY-MM-DD auswählen'}
             </Text>
           </TouchableOpacity>
@@ -312,7 +314,7 @@ const Step3_DateTime = ({
             ]}
             onPress={() => setShowTimePicker(true)}
           >
-            <Text>
+            <Text style={{ color: 'gray' }}>
               {bookingData.appointment.preferredTime || 'HH:mm auswählen'}
             </Text>
           </TouchableOpacity>
@@ -524,7 +526,7 @@ const Step4_Personal = ({
         <Text style={styles.sectionTitle}>
           Wie wurden Sie auf uns aufmerksam?
         </Text>
-        <Text>
+        <Text style={styles.description}>
           Wurden Sie durch Ihren Arbeitgeber auf Appclean aufmerksam, haben Sie
           uns in einer Werbung wahrgenommen oder wurden wir empfohlen? Wir
           freuen uns über eine Info hierzu!

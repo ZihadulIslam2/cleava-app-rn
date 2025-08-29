@@ -618,16 +618,59 @@ const Step5_Review = ({
 )
 
 const Step6_Success = ({ navigation }: { navigation: any }) => (
-  <View style={[styles.container, { justifyContent: 'center', flex: 1 }]}>
-    <Text style={styles.sectionTitle}>
-      Vielen Dank — Buchungsanfrage gesendet!
-    </Text>
-    <Text style={styles.description}>Wir melden uns in Kürze.</Text>
-    <TouchableOpacity
-      style={styles.primaryButton}
-      onPress={() => navigation.navigate('Home')}
+  <View
+    style={{
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      paddingHorizontal: 24,
+      backgroundColor: '#F9FAFB',
+    }}
+  >
+    <Text
+      style={{
+        fontSize: 24,
+        fontWeight: '700',
+        color: '#111827',
+        textAlign: 'center',
+        marginBottom: 16,
+      }}
     >
-      <Text style={styles.primaryButtonText}>Zurück zur Startseite</Text>
+      Vielen Dank für Ihre Buchungsanfrage!
+    </Text>
+
+    <Text
+      style={{
+        fontSize: 16,
+        color: '#4B5563',
+        textAlign: 'center',
+        marginBottom: 32,
+        lineHeight: 22,
+      }}
+    >
+      Ihre Daten wurden an uns übermittelt und werden jetzt bearbeitet. Eine
+      Bestätigung Ihrer Buchung, sowie weitere Informationen werden Ihnen in
+      Kürze zugeschickt.
+    </Text>
+
+    <TouchableOpacity
+      onPress={() => navigation.navigate('Home')}
+      style={{
+        backgroundColor: '#111827',
+        borderRadius: 10,
+        paddingVertical: 14,
+        paddingHorizontal: 32,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 4.65,
+        elevation: 8,
+      }}
+    >
+      <Text style={{ color: '#FFFFFF', fontSize: 16, fontWeight: '600' }}>
+        Zurück zur Startseite
+      </Text>
     </TouchableOpacity>
   </View>
 )
@@ -1114,6 +1157,14 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingVertical: 14,
     alignItems: 'center',
+  },
+  primaryButtonSuccesspage: {
+    backgroundColor: '#000',
+    borderRadius: 8,
+    paddingVertical: 14,
+    paddingHorizontal: 24, // optional, makes button wider
+    alignItems: 'center',
+    alignSelf: 'center', // center the button horizontally
   },
   primaryButtonText: { color: '#fff', fontWeight: '600' },
   secondaryButton: {

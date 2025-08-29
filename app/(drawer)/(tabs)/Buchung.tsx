@@ -5,6 +5,7 @@ import RadioOption from '@/components/RadioOption'
 import { createBooking } from '@/services/BookingApi'
 import { BookingData } from '@/types/booking'
 import DateTimePicker from '@react-native-community/datetimepicker'
+import { Picker } from '@react-native-picker/picker'
 import { useNavigation } from '@react-navigation/native'
 import React, { useCallback, useState } from 'react'
 import {
@@ -70,7 +71,9 @@ const Step1 = ({
         </Text>
         <Text>Berlin, Frankfurt, Hamburg, München, Nürnberg, Stuttgart</Text>
 
-        <Text style={styles.sectionTitle}>Appartement und Reinigungsintervall</Text>
+        <Text style={styles.sectionTitle}>
+          Appartement und Reinigungsintervall
+        </Text>
 
         <Text style={styles.inputLabel}>Appartement-Größe</Text>
         <TextInput
@@ -373,6 +376,23 @@ const Step4_Personal = ({
           Teilen Sie uns bitte Ihre persönlichen Daten mit und wann wir Sie am
           Besten erreichen können.
         </Text>
+
+        <Text style={styles.sectionTitle}>Persönliche Daten</Text>
+        <Text style={styles.inputLabel}>Anrede</Text>
+        <View style={styles.pickerContainer}>
+          <Picker
+            selectedValue={bookingData.personalInfo.salutation || 'select'}
+            onValueChange={(value) =>
+              updateNested('personalInfo', 'salutation', value)
+            }
+            style={styles.pickerInner}
+            dropdownIconColor="#000"
+          >
+            <Picker.Item label="Select..." value="select" color="#888" />
+            <Picker.Item label="Mr" value="Mr" color="#000" />
+            <Picker.Item label="Ms" value="Ms" color="#000" />
+          </Picker>
+        </View>
 
         <Text style={styles.inputLabel}>Vorname</Text>
         <TextInput
@@ -1039,6 +1059,27 @@ export default function BuchungScreen() {
 }
 
 const styles = StyleSheet.create({
+  pickerContainer: {
+    borderWidth: 1,
+    borderColor: '#D1D5DB',
+    borderRadius: 8,
+    marginBottom: 8,
+    overflow: 'hidden', // keep rounded corners
+  },
+  pickerInner: {
+    height: 50,
+    width: '100%',
+    color: '#000',
+    paddingHorizontal: 12, // move padding here
+  },
+  picker: {
+    borderWidth: 1,
+    borderColor: '#D1D5DB',
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    marginBottom: 8,
+  },
   containerforKeyboard: {
     flexGrow: 1,
     justifyContent: 'center',

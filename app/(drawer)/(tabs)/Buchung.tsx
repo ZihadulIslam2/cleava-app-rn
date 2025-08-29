@@ -1,12 +1,12 @@
 // BuchungScreen.tsx
-import Header from "@/components/Header";
-import PackageOption from "@/components/PackageOption";
-import RadioOption from "@/components/RadioOption";
-import { createBooking } from "@/services/BookingApi";
-import { BookingData } from "@/types/booking";
-import DateTimePicker from "@react-native-community/datetimepicker";
-import { useNavigation } from "@react-navigation/native";
-import React, { useCallback, useState } from "react";
+import Header from '@/components/Header'
+import PackageOption from '@/components/PackageOption'
+import RadioOption from '@/components/RadioOption'
+import { createBooking } from '@/services/BookingApi'
+import { BookingData } from '@/types/booking'
+import DateTimePicker from '@react-native-community/datetimepicker'
+import { useNavigation } from '@react-navigation/native'
+import React, { useCallback, useState } from 'react'
 import {
   Alert,
   KeyboardAvoidingView,
@@ -18,17 +18,18 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-} from "react-native";
+} from 'react-native'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 // Define Address type to fix the TypeScript error
 type Address = {
-  houseNumber: string;
-  zipCode: string;
-  street: string;
-  city: string;
-};
+  houseNumber: string
+  zipCode: string
+  street: string
+  city: string
+}
 
-type ErrorsMap = Record<string, string>;
+type ErrorsMap = Record<string, string>
 
 /* ----------------------
    Step components
@@ -42,14 +43,14 @@ const Step1 = ({
   onNext,
   errors,
 }: {
-  bookingData: BookingData;
-  updateField: (field: keyof BookingData, value: any) => void;
-  onNext: () => void;
-  errors: ErrorsMap;
+  bookingData: BookingData
+  updateField: (field: keyof BookingData, value: any) => void
+  onNext: () => void
+  errors: ErrorsMap
 }) => (
   <KeyboardAvoidingView
     style={{ flex: 1 }}
-    behavior={Platform.OS === "ios" ? "padding" : undefined}
+    behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     keyboardVerticalOffset={80}
   >
     <ScrollView
@@ -60,84 +61,92 @@ const Step1 = ({
         <Text style={styles.sectionTitle}>Reinigung</Text>
         <Text style={styles.description}>
           Die benötigte Zeit zum Reinigen Ihres Appartements orientiert sich an
-          Ihrer Wohnfläche.
+          Ihrer Wohnfläche. Geben Sie uns bitte zudem an, wie oft wir Ihr
+          Appartement im Monat reinigen und welche Extras Sie dazubuchen
+          möchten.
         </Text>
+        <Text style={styles.inputLabel}>
+          AppClean ist in folgenden Städten verfügbar:
+        </Text>
+        <Text>Berlin, Frankfurt, Hamburg, München, Nürnberg, Stuttgart</Text>
+
+        <Text style={styles.sectionTitle}>Appartement und Reinigungsintervall</Text>
 
         <Text style={styles.inputLabel}>Appartement-Größe</Text>
         <TextInput
           style={[
             styles.textInput,
-            errors["apartmentSize"] ? styles.inputErrorBorder : null,
+            errors['apartmentSize'] ? styles.inputErrorBorder : null,
           ]}
           placeholder="Wohnungsgröße"
           value={bookingData.apartmentSize}
-          onChangeText={(v) => updateField("apartmentSize", v)}
+          onChangeText={(v) => updateField('apartmentSize', v)}
         />
-        {errors["apartmentSize"] && (
-          <Text style={styles.errorText}>{errors["apartmentSize"]}</Text>
+        {errors['apartmentSize'] && (
+          <Text style={styles.errorText}>{errors['apartmentSize']}</Text>
         )}
 
         <Text style={styles.inputLabel}>Reinigungsintervall</Text>
         <TextInput
           style={[
             styles.textInput,
-            errors["cleaningInterval"] ? styles.inputErrorBorder : null,
+            errors['cleaningInterval'] ? styles.inputErrorBorder : null,
           ]}
           placeholder="z. B. 1x/Woche"
           value={bookingData.cleaningInterval}
-          onChangeText={(v) => updateField("cleaningInterval", v)}
+          onChangeText={(v) => updateField('cleaningInterval', v)}
         />
-        {errors["cleaningInterval"] && (
-          <Text style={styles.errorText}>{errors["cleaningInterval"]}</Text>
+        {errors['cleaningInterval'] && (
+          <Text style={styles.errorText}>{errors['cleaningInterval']}</Text>
         )}
 
         <Text style={styles.inputLabel}>Anzahl Personen</Text>
         <TextInput
           style={[
             styles.textInput,
-            errors["householdSize"] ? styles.inputErrorBorder : null,
+            errors['householdSize'] ? styles.inputErrorBorder : null,
           ]}
           placeholder="Anzahl Personen"
           keyboardType="numeric"
           value={bookingData.householdSize}
-          onChangeText={(v) => updateField("householdSize", v)}
+          onChangeText={(v) => updateField('householdSize', v)}
         />
-        {errors["householdSize"] && (
-          <Text style={styles.errorText}>{errors["householdSize"]}</Text>
+        {errors['householdSize'] && (
+          <Text style={styles.errorText}>{errors['householdSize']}</Text>
         )}
 
         <Text style={styles.sectionTitle}>Cleaning Service Paket</Text>
         <PackageOption
           title="Executive Cleaning Service"
           items={[
-            "Reinigung Schlafzimmer",
-            "Betten aufbereiten",
-            "Reinigung Wohnbereich",
-            "Reinigung Küche",
-            "Reinigung Bad (desinfizierend)",
-            "Bereitstellung Reinigungsmittel",
+            'Reinigung Schlafzimmer',
+            'Betten aufbereiten',
+            'Reinigung Wohnbereich',
+            'Reinigung Küche',
+            'Reinigung Bad (desinfizierend)',
+            'Bereitstellung Reinigungsmittel',
           ]}
-          selected={bookingData.cleaningPackage === "executive"}
-          onPress={() => updateField("cleaningPackage", "executive")}
+          selected={bookingData.cleaningPackage === 'executive'}
+          onPress={() => updateField('cleaningPackage', 'executive')}
         />
         <PackageOption
           title="CEO Cleaning Service"
           items={[
-            "Reinigung Schlafzimmer",
-            "Betten aufbereiten",
-            "Reinigung Wohnbereich",
-            "Reinigung Küche",
-            "Reinigung Bad (desinfizierend)",
-            "Bereitstellung Reinigungsmittel",
-            "Bereitstellung Verbrauchsartikel",
-            "Geschirr spülen",
-            "Bügelservice",
+            'Reinigung Schlafzimmer',
+            'Betten aufbereiten',
+            'Reinigung Wohnbereich',
+            'Reinigung Küche',
+            'Reinigung Bad (desinfizierend)',
+            'Bereitstellung Reinigungsmittel',
+            'Bereitstellung Verbrauchsartikel',
+            'Geschirr spülen',
+            'Bügelservice',
           ]}
-          selected={bookingData.cleaningPackage === "ceo"}
-          onPress={() => updateField("cleaningPackage", "ceo")}
+          selected={bookingData.cleaningPackage === 'ceo'}
+          onPress={() => updateField('cleaningPackage', 'ceo')}
         />
-        {errors["cleaningPackage"] && (
-          <Text style={styles.errorText}>{errors["cleaningPackage"]}</Text>
+        {errors['cleaningPackage'] && (
+          <Text style={styles.errorText}>{errors['cleaningPackage']}</Text>
         )}
 
         <Text style={styles.inputLabel}>Besondere Wünsche</Text>
@@ -146,16 +155,19 @@ const Step1 = ({
           placeholder="Schreiben Sie hier..."
           multiline
           value={bookingData.specialWish}
-          onChangeText={(v) => updateField("specialWish", v)}
+          onChangeText={(v) => updateField('specialWish', v)}
         />
 
-        <TouchableOpacity style={styles.primaryButton} onPress={onNext}>
+        <TouchableOpacity
+          style={[styles.primaryButton, { marginBottom: 30 }]}
+          onPress={onNext}
+        >
           <Text style={styles.primaryButtonText}>Bestätigen</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
   </KeyboardAvoidingView>
-);
+)
 
 const Step2 = ({
   bookingData,
@@ -164,15 +176,15 @@ const Step2 = ({
   onNext,
   errors,
 }: {
-  bookingData: BookingData;
-  updateNested: (parent: keyof BookingData, field: string, value: any) => void;
-  onPrev: () => void;
-  onNext: () => void;
-  errors: ErrorsMap;
+  bookingData: BookingData
+  updateNested: (parent: keyof BookingData, field: string, value: any) => void
+  onPrev: () => void
+  onNext: () => void
+  errors: ErrorsMap
 }) => (
   <KeyboardAvoidingView
     style={{ flex: 1 }}
-    behavior={Platform.OS === "ios" ? "padding" : undefined}
+    behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     keyboardVerticalOffset={80}
   >
     <ScrollView
@@ -186,14 +198,12 @@ const Step2 = ({
         <RadioOption
           label="Ja, ich habe einen Wunschtermin."
           selected={bookingData.appointment.hasPreferredDate}
-          onPress={() => updateNested("appointment", "hasPreferredDate", true)}
+          onPress={() => updateNested('appointment', 'hasPreferredDate', true)}
         />
         <RadioOption
           label="Nein, bitte Termin vorschlagen"
           selected={!bookingData.appointment.hasPreferredDate}
-          onPress={() =>
-            updateNested("appointment", "hasPreferredDate", false)
-          }
+          onPress={() => updateNested('appointment', 'hasPreferredDate', false)}
         />
         {/* no field errors here usually */}
         <View style={styles.buttonRow}>
@@ -207,7 +217,7 @@ const Step2 = ({
       </View>
     </ScrollView>
   </KeyboardAvoidingView>
-);
+)
 
 const Step3_DateTime = ({
   bookingData,
@@ -216,36 +226,36 @@ const Step3_DateTime = ({
   onNext,
   errors,
 }: {
-  bookingData: BookingData;
-  updateNested: (parent: keyof BookingData, field: string, value: any) => void;
-  onPrev: () => void;
-  onNext: () => void;
-  errors: ErrorsMap;
+  bookingData: BookingData
+  updateNested: (parent: keyof BookingData, field: string, value: any) => void
+  onPrev: () => void
+  onNext: () => void
+  errors: ErrorsMap
 }) => {
-  const [showDatePicker, setShowDatePicker] = useState(false);
-  const [showTimePicker, setShowTimePicker] = useState(false);
+  const [showDatePicker, setShowDatePicker] = useState(false)
+  const [showTimePicker, setShowTimePicker] = useState(false)
 
   const onDateChange = (_: any, selectedDate?: Date) => {
-    setShowDatePicker(false);
+    setShowDatePicker(false)
     if (selectedDate) {
-      const formatted = selectedDate.toISOString().split("T")[0]; // YYYY-MM-DD
-      updateNested("appointment", "preferredDate", formatted);
+      const formatted = selectedDate.toISOString().split('T')[0] // YYYY-MM-DD
+      updateNested('appointment', 'preferredDate', formatted)
     }
-  };
+  }
 
   const onTimeChange = (_: any, selectedTime?: Date) => {
-    setShowTimePicker(false);
+    setShowTimePicker(false)
     if (selectedTime) {
-      const hh = String(selectedTime.getHours()).padStart(2, "0");
-      const mm = String(selectedTime.getMinutes()).padStart(2, "0");
-      updateNested("appointment", "preferredTime", `${hh}:${mm}`);
+      const hh = String(selectedTime.getHours()).padStart(2, '0')
+      const mm = String(selectedTime.getMinutes()).padStart(2, '0')
+      updateNested('appointment', 'preferredTime', `${hh}:${mm}`)
     }
-  };
+  }
 
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
-      behavior={Platform.OS === "ios" ? "padding" : undefined}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       keyboardVerticalOffset={80}
     >
       <ScrollView
@@ -260,17 +270,19 @@ const Step3_DateTime = ({
           <TouchableOpacity
             style={[
               styles.textInput,
-              errors["appointment.preferredDate"] ? styles.inputErrorBorder : null,
+              errors['appointment.preferredDate']
+                ? styles.inputErrorBorder
+                : null,
             ]}
             onPress={() => setShowDatePicker(true)}
           >
             <Text>
-              {bookingData.appointment.preferredDate || "YYYY-MM-DD auswählen"}
+              {bookingData.appointment.preferredDate || 'YYYY-MM-DD auswählen'}
             </Text>
           </TouchableOpacity>
-          {errors["appointment.preferredDate"] && (
+          {errors['appointment.preferredDate'] && (
             <Text style={styles.errorText}>
-              {errors["appointment.preferredDate"]}
+              {errors['appointment.preferredDate']}
             </Text>
           )}
           {showDatePicker && (
@@ -281,7 +293,7 @@ const Step3_DateTime = ({
                   : new Date()
               }
               mode="date"
-              display={Platform.OS === "ios" ? "spinner" : "default"}
+              display={Platform.OS === 'ios' ? 'spinner' : 'default'}
               onChange={onDateChange}
             />
           )}
@@ -291,17 +303,19 @@ const Step3_DateTime = ({
           <TouchableOpacity
             style={[
               styles.textInput,
-              errors["appointment.preferredTime"] ? styles.inputErrorBorder : null,
+              errors['appointment.preferredTime']
+                ? styles.inputErrorBorder
+                : null,
             ]}
             onPress={() => setShowTimePicker(true)}
           >
             <Text>
-              {bookingData.appointment.preferredTime || "HH:mm auswählen"}
+              {bookingData.appointment.preferredTime || 'HH:mm auswählen'}
             </Text>
           </TouchableOpacity>
-          {errors["appointment.preferredTime"] && (
+          {errors['appointment.preferredTime'] && (
             <Text style={styles.errorText}>
-              {errors["appointment.preferredTime"]}
+              {errors['appointment.preferredTime']}
             </Text>
           )}
           {showTimePicker && (
@@ -309,7 +323,7 @@ const Step3_DateTime = ({
               value={new Date()}
               mode="time"
               is24Hour={true}
-              display={Platform.OS === "ios" ? "spinner" : "default"}
+              display={Platform.OS === 'ios' ? 'spinner' : 'default'}
               onChange={onTimeChange}
             />
           )}
@@ -326,8 +340,8 @@ const Step3_DateTime = ({
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
-  );
-};
+  )
+}
 
 const Step4_Personal = ({
   bookingData,
@@ -337,16 +351,16 @@ const Step4_Personal = ({
   onNext,
   errors,
 }: {
-  bookingData: BookingData;
-  updateNested: (parent: keyof BookingData, field: string, value: any) => void;
-  updateAddressField: (field: keyof Address, value: string) => void;
-  onPrev: () => void;
-  onNext: () => void;
-  errors: ErrorsMap;
+  bookingData: BookingData
+  updateNested: (parent: keyof BookingData, field: string, value: any) => void
+  updateAddressField: (field: keyof Address, value: string) => void
+  onPrev: () => void
+  onNext: () => void
+  errors: ErrorsMap
 }) => (
   <KeyboardAvoidingView
     style={{ flex: 1 }}
-    behavior={Platform.OS === "ios" ? "padding" : undefined}
+    behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     keyboardVerticalOffset={80}
   >
     <ScrollView
@@ -364,14 +378,14 @@ const Step4_Personal = ({
         <TextInput
           style={[
             styles.textInput,
-            errors["personalInfo.firstName"] ? styles.inputErrorBorder : null,
+            errors['personalInfo.firstName'] ? styles.inputErrorBorder : null,
           ]}
           value={bookingData.personalInfo.firstName}
-          onChangeText={(v) => updateNested("personalInfo", "firstName", v)}
+          onChangeText={(v) => updateNested('personalInfo', 'firstName', v)}
         />
-        {errors["personalInfo.firstName"] && (
+        {errors['personalInfo.firstName'] && (
           <Text style={styles.errorText}>
-            {errors["personalInfo.firstName"]}
+            {errors['personalInfo.firstName']}
           </Text>
         )}
 
@@ -379,14 +393,14 @@ const Step4_Personal = ({
         <TextInput
           style={[
             styles.textInput,
-            errors["personalInfo.lastName"] ? styles.inputErrorBorder : null,
+            errors['personalInfo.lastName'] ? styles.inputErrorBorder : null,
           ]}
           value={bookingData.personalInfo.lastName}
-          onChangeText={(v) => updateNested("personalInfo", "lastName", v)}
+          onChangeText={(v) => updateNested('personalInfo', 'lastName', v)}
         />
-        {errors["personalInfo.lastName"] && (
+        {errors['personalInfo.lastName'] && (
           <Text style={styles.errorText}>
-            {errors["personalInfo.lastName"]}
+            {errors['personalInfo.lastName']}
           </Text>
         )}
 
@@ -394,88 +408,96 @@ const Step4_Personal = ({
         <TextInput
           style={[
             styles.textInput,
-            errors["personalInfo.phone"] ? styles.inputErrorBorder : null,
+            errors['personalInfo.phone'] ? styles.inputErrorBorder : null,
           ]}
           value={bookingData.personalInfo.phone}
           keyboardType="phone-pad"
-          onChangeText={(v) => updateNested("personalInfo", "phone", v)}
+          onChangeText={(v) => updateNested('personalInfo', 'phone', v)}
         />
-        {errors["personalInfo.phone"] && (
-          <Text style={styles.errorText}>{errors["personalInfo.phone"]}</Text>
+        {errors['personalInfo.phone'] && (
+          <Text style={styles.errorText}>{errors['personalInfo.phone']}</Text>
         )}
 
         <Text style={styles.inputLabel}>E-Mail</Text>
         <TextInput
           style={[
             styles.textInput,
-            errors["personalInfo.email"] ? styles.inputErrorBorder : null,
+            errors['personalInfo.email'] ? styles.inputErrorBorder : null,
           ]}
           value={bookingData.personalInfo.email}
           keyboardType="email-address"
-          onChangeText={(v) => updateNested("personalInfo", "email", v)}
+          onChangeText={(v) => updateNested('personalInfo', 'email', v)}
         />
-        {errors["personalInfo.email"] && (
-          <Text style={styles.errorText}>{errors["personalInfo.email"]}</Text>
+        {errors['personalInfo.email'] && (
+          <Text style={styles.errorText}>{errors['personalInfo.email']}</Text>
         )}
 
         <Text style={styles.sectionTitle}>Adresse</Text>
         <TextInput
           style={[
             styles.textInput,
-            errors["personalInfo.address.houseNumber"] ? styles.inputErrorBorder : null,
+            errors['personalInfo.address.houseNumber']
+              ? styles.inputErrorBorder
+              : null,
           ]}
           placeholder="Nr."
           value={bookingData.personalInfo.address.houseNumber}
-          onChangeText={(v) => updateAddressField("houseNumber", v)}
+          onChangeText={(v) => updateAddressField('houseNumber', v)}
         />
-        {errors["personalInfo.address.houseNumber"] && (
+        {errors['personalInfo.address.houseNumber'] && (
           <Text style={styles.errorText}>
-            {errors["personalInfo.address.houseNumber"]}
+            {errors['personalInfo.address.houseNumber']}
           </Text>
         )}
 
         <TextInput
           style={[
             styles.textInput,
-            errors["personalInfo.address.zipCode"] ? styles.inputErrorBorder : null,
+            errors['personalInfo.address.zipCode']
+              ? styles.inputErrorBorder
+              : null,
           ]}
           placeholder="PLZ"
           value={bookingData.personalInfo.address.zipCode}
-          onChangeText={(v) => updateAddressField("zipCode", v)}
+          onChangeText={(v) => updateAddressField('zipCode', v)}
         />
-        {errors["personalInfo.address.zipCode"] && (
+        {errors['personalInfo.address.zipCode'] && (
           <Text style={styles.errorText}>
-            {errors["personalInfo.address.zipCode"]}
+            {errors['personalInfo.address.zipCode']}
           </Text>
         )}
 
         <TextInput
           style={[
             styles.textInput,
-            errors["personalInfo.address.street"] ? styles.inputErrorBorder : null,
+            errors['personalInfo.address.street']
+              ? styles.inputErrorBorder
+              : null,
           ]}
           placeholder="Straße"
           value={bookingData.personalInfo.address.street}
-          onChangeText={(v) => updateAddressField("street", v)}
+          onChangeText={(v) => updateAddressField('street', v)}
         />
-        {errors["personalInfo.address.street"] && (
+        {errors['personalInfo.address.street'] && (
           <Text style={styles.errorText}>
-            {errors["personalInfo.address.street"]}
+            {errors['personalInfo.address.street']}
           </Text>
         )}
 
         <TextInput
           style={[
             styles.textInput,
-            errors["personalInfo.address.city"] ? styles.inputErrorBorder : null,
+            errors['personalInfo.address.city']
+              ? styles.inputErrorBorder
+              : null,
           ]}
           placeholder="Ort"
           value={bookingData.personalInfo.address.city}
-          onChangeText={(v) => updateAddressField("city", v)}
+          onChangeText={(v) => updateAddressField('city', v)}
         />
-        {errors["personalInfo.address.city"] && (
+        {errors['personalInfo.address.city'] && (
           <Text style={styles.errorText}>
-            {errors["personalInfo.address.city"]}
+            {errors['personalInfo.address.city']}
           </Text>
         )}
 
@@ -484,8 +506,8 @@ const Step4_Personal = ({
         </Text>
         <Text>
           Wurden Sie durch Ihren Arbeitgeber auf Appclean aufmerksam, haben Sie
-          uns in einer Werbung wahrgenommen oder wurden wir empfohlen? Wir freuen
-          uns über eine Info hierzu!
+          uns in einer Werbung wahrgenommen oder wurden wir empfohlen? Wir
+          freuen uns über eine Info hierzu!
         </Text>
 
         <View style={styles.buttonRow}>
@@ -499,7 +521,7 @@ const Step4_Personal = ({
       </View>
     </ScrollView>
   </KeyboardAvoidingView>
-);
+)
 
 const Step5_Review = ({
   bookingData,
@@ -507,14 +529,14 @@ const Step5_Review = ({
   submitBooking,
   isLoading,
 }: {
-  bookingData: BookingData;
-  onPrev: () => void;
-  submitBooking: () => void;
-  isLoading: boolean;
+  bookingData: BookingData
+  onPrev: () => void
+  submitBooking: () => void
+  isLoading: boolean
 }) => (
   <KeyboardAvoidingView
     style={{ flex: 1 }}
-    behavior={Platform.OS === "ios" ? "padding" : undefined}
+    behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     keyboardVerticalOffset={80}
   >
     <ScrollView
@@ -535,8 +557,8 @@ const Step5_Review = ({
 
         <Text style={[styles.sectionTitle, { marginTop: 12 }]}>Termin</Text>
         <Text>
-          Has preferred date:{" "}
-          {bookingData.appointment.hasPreferredDate ? "Yes" : "No"}
+          Has preferred date:{' '}
+          {bookingData.appointment.hasPreferredDate ? 'Yes' : 'No'}
         </Text>
         {bookingData.appointment.hasPreferredDate && (
           <>
@@ -545,10 +567,13 @@ const Step5_Review = ({
           </>
         )}
 
-        <Text style={[styles.sectionTitle, { marginTop: 12 }]}>Persönliches</Text>
+        <Text style={[styles.sectionTitle, { marginTop: 12 }]}>
+          Persönliches
+        </Text>
 
         <Text>
-          {bookingData.personalInfo.firstName} {bookingData.personalInfo.lastName}
+          {bookingData.personalInfo.firstName}{' '}
+          {bookingData.personalInfo.lastName}
         </Text>
         <Text>{bookingData.personalInfo.phone}</Text>
         <Text>{bookingData.personalInfo.email}</Text>
@@ -563,91 +588,91 @@ const Step5_Review = ({
             disabled={isLoading}
           >
             <Text style={styles.primaryButtonText}>
-              {isLoading ? "Wird gesendet..." : "Einreichen"}
+              {isLoading ? 'Wird gesendet...' : 'Einreichen'}
             </Text>
           </TouchableOpacity>
         </View>
       </View>
     </ScrollView>
   </KeyboardAvoidingView>
-);
+)
 
 const Step6_Success = ({ navigation }: { navigation: any }) => (
-  <View style={[styles.container, { justifyContent: "center", flex: 1 }]}>
+  <View style={[styles.container, { justifyContent: 'center', flex: 1 }]}>
     <Text style={styles.sectionTitle}>
       Vielen Dank — Buchungsanfrage gesendet!
     </Text>
     <Text style={styles.description}>Wir melden uns in Kürze.</Text>
     <TouchableOpacity
       style={styles.primaryButton}
-      onPress={() => navigation.navigate("Home")}
+      onPress={() => navigation.navigate('Home')}
     >
       <Text style={styles.primaryButtonText}>Zurück zur Startseite</Text>
     </TouchableOpacity>
   </View>
-);
+)
 
 /* ----------------------
    Main screen
    ---------------------- */
 
 export default function BuchungScreen() {
-  const navigation = useNavigation<any>();
-  const [currentStep, setCurrentStep] = useState<number>(1);
-  const [isLoading, setIsLoading] = useState(false);
+  const navigation = useNavigation<any>()
+  const [currentStep, setCurrentStep] = useState<number>(1)
+  const [isLoading, setIsLoading] = useState(false)
 
-  const [errors, setErrors] = useState<ErrorsMap>({});
+  const [errors, setErrors] = useState<ErrorsMap>({})
 
   const [bookingData, setBookingData] = useState<BookingData>({
-    apartmentSize: "",
-    cleaningInterval: "",
-    householdSize: "",
-    cleaningPackage: "",
-    specialWish: "",
+    apartmentSize: '',
+    cleaningInterval: '',
+    householdSize: '',
+    cleaningPackage: '',
+    specialWish: '',
     appointment: {
       hasPreferredDate: false,
       preferredDate: null,
       preferredTime: null,
     },
     personalInfo: {
-      salutation: "",
-      firstName: "",
-      lastName: "",
-      phone: "",
-      email: "",
-      address: { houseNumber: "", zipCode: "", street: "", city: "" },
-      howDidYouFindUs: "",
+      salutation: '',
+      firstName: '',
+      lastName: '',
+      phone: '',
+      email: '',
+      address: { houseNumber: '', zipCode: '', street: '', city: '' },
+      howDidYouFindUs: '',
     },
-  });
+  })
 
   const clearError = useCallback((key: string) => {
     setErrors((prev) => {
-      if (!prev[key]) return prev;
-      const next = { ...prev };
-      delete next[key];
-      return next;
-    });
-  }, []);
+      if (!prev[key]) return prev
+      const next = { ...prev }
+      delete next[key]
+      return next
+    })
+  }, [])
 
   // update functions also clear related field errors
   const updateField = useCallback(
     <K extends keyof BookingData>(field: K, value: BookingData[K]) => {
-      setBookingData((prev) => ({ ...prev, [field]: value }));
-      clearError(String(field));
+      setBookingData((prev) => ({ ...prev, [field]: value }))
+      clearError(String(field))
     },
     [clearError]
-  );
+  )
 
   const updateNested = useCallback(
     (parent: keyof BookingData, field: string, value: any) => {
       setBookingData((prev) => ({
         ...prev,
         [parent]: { ...(prev as any)[parent], [field]: value },
-      }));
-      clearError(`${String(parent)}.${field}`);
+      }))
+      clearError(`${String(parent)}.${field}`)
     },
     [clearError]
-  );
+  )
 
   const updateAddressField = useCallback(
     (field: keyof Address, value: string) => {
@@ -660,14 +685,14 @@ export default function BuchungScreen() {
             [field]: value,
           },
         },
-      }));
-      clearError(`personalInfo.address.${String(field)}`);
+      }))
+      clearError(`personalInfo.address.${String(field)}`)
     },
     [clearError]
-  );
+  )
 
-  const nextStep = () => setCurrentStep((s) => Math.min(6, s + 1));
-  const prevStep = () => setCurrentStep((s) => Math.max(1, s - 1));
+  const nextStep = () => setCurrentStep((s) => Math.min(6, s + 1))
+  const prevStep = () => setCurrentStep((s) => Math.max(1, s - 1))
 
   /* ----------------------
      Validation helpers
@@ -675,41 +700,46 @@ export default function BuchungScreen() {
      ---------------------- */
 
   const isValidEmail = (email?: string) =>
-    !!email &&
-    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email).toLowerCase());
+    !!email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email).toLowerCase())
 
   const validateStep = (step: number): ErrorsMap => {
-    const e: ErrorsMap = {};
+    const e: ErrorsMap = {}
 
     if (step === 1) {
-      if (!bookingData.apartmentSize || bookingData.apartmentSize.trim() === "") {
-        e["apartmentSize"] = "Bitte Wohnungsgröße angeben.";
+      if (
+        !bookingData.apartmentSize ||
+        bookingData.apartmentSize.trim() === ''
+      ) {
+        e['apartmentSize'] = 'Bitte Wohnungsgröße angeben.'
       }
       if (
         !bookingData.cleaningInterval ||
-        bookingData.cleaningInterval.trim() === ""
+        bookingData.cleaningInterval.trim() === ''
       ) {
-        e["cleaningInterval"] = "Bitte Reinigungsintervall angeben.";
+        e['cleaningInterval'] = 'Bitte Reinigungsintervall angeben.'
       }
-      if (!bookingData.householdSize || bookingData.householdSize.trim() === "") {
-        e["householdSize"] = "Bitte Anzahl Personen angeben.";
+      if (
+        !bookingData.householdSize ||
+        bookingData.householdSize.trim() === ''
+      ) {
+        e['householdSize'] = 'Bitte Anzahl Personen angeben.'
       } else if (!/^\d+$/.test(bookingData.householdSize.trim())) {
-        e["householdSize"] = "Bitte eine gültige Zahl eingeben.";
+        e['householdSize'] = 'Bitte eine gültige Zahl eingeben.'
       } else if (parseInt(bookingData.householdSize, 10) <= 0) {
-        e["householdSize"] = "Anzahl Personen muss größer als 0 sein.";
+        e['householdSize'] = 'Anzahl Personen muss größer als 0 sein.'
       }
       if (!bookingData.cleaningPackage) {
-        e["cleaningPackage"] = "Bitte ein Paket auswählen.";
+        e['cleaningPackage'] = 'Bitte ein Paket auswählen.'
       }
     }
 
     if (step === 3) {
       if (bookingData.appointment.hasPreferredDate) {
         if (!bookingData.appointment.preferredDate) {
-          e["appointment.preferredDate"] = "Bitte Datum auswählen.";
+          e['appointment.preferredDate'] = 'Bitte Datum auswählen.'
         }
         if (!bookingData.appointment.preferredTime) {
-          e["appointment.preferredTime"] = "Bitte Uhrzeit auswählen.";
+          e['appointment.preferredTime'] = 'Bitte Uhrzeit auswählen.'
         }
       }
     }
@@ -717,104 +747,108 @@ export default function BuchungScreen() {
     if (step === 4) {
       if (
         !bookingData.personalInfo.firstName ||
-        bookingData.personalInfo.firstName.trim() === ""
+        bookingData.personalInfo.firstName.trim() === ''
       ) {
-        e["personalInfo.firstName"] = "Bitte Vorname angeben.";
+        e['personalInfo.firstName'] = 'Bitte Vorname angeben.'
       }
       if (
         !bookingData.personalInfo.lastName ||
-        bookingData.personalInfo.lastName.trim() === ""
+        bookingData.personalInfo.lastName.trim() === ''
       ) {
-        e["personalInfo.lastName"] = "Bitte Nachname angeben.";
+        e['personalInfo.lastName'] = 'Bitte Nachname angeben.'
       }
       if (
         !bookingData.personalInfo.phone ||
-        bookingData.personalInfo.phone.trim() === ""
+        bookingData.personalInfo.phone.trim() === ''
       ) {
-        e["personalInfo.phone"] = "Bitte Telefonnummer angeben.";
+        e['personalInfo.phone'] = 'Bitte Telefonnummer angeben.'
       }
       if (!isValidEmail(bookingData.personalInfo.email)) {
-        e["personalInfo.email"] = "Bitte gültige E-Mail-Adresse angeben.";
+        e['personalInfo.email'] = 'Bitte gültige E-Mail-Adresse angeben.'
       }
       // address
       if (
         !bookingData.personalInfo.address.houseNumber ||
-        bookingData.personalInfo.address.houseNumber.trim() === ""
+        bookingData.personalInfo.address.houseNumber.trim() === ''
       ) {
-        e["personalInfo.address.houseNumber"] = "Bitte Hausnummer angeben.";
+        e['personalInfo.address.houseNumber'] = 'Bitte Hausnummer angeben.'
       }
       if (
         !bookingData.personalInfo.address.zipCode ||
-        bookingData.personalInfo.address.zipCode.trim() === ""
+        bookingData.personalInfo.address.zipCode.trim() === ''
       ) {
-        e["personalInfo.address.zipCode"] = "Bitte PLZ angeben.";
+        e['personalInfo.address.zipCode'] = 'Bitte PLZ angeben.'
       }
       if (
         !bookingData.personalInfo.address.street ||
-        bookingData.personalInfo.address.street.trim() === ""
+        bookingData.personalInfo.address.street.trim() === ''
       ) {
-        e["personalInfo.address.street"] = "Bitte Straße angeben.";
+        e['personalInfo.address.street'] = 'Bitte Straße angeben.'
       }
       if (
         !bookingData.personalInfo.address.city ||
-        bookingData.personalInfo.address.city.trim() === ""
+        bookingData.personalInfo.address.city.trim() === ''
       ) {
-        e["personalInfo.address.city"] = "Bitte Ort angeben.";
+        e['personalInfo.address.city'] = 'Bitte Ort angeben.'
       }
     }
 
     // You can add more validations for other steps if needed.
 
-    return e;
-  };
+    return e
+  }
 
   // Validates current step and moves forward only if ok
   const handleNext = () => {
-    const errs = validateStep(currentStep === 3 && !bookingData.appointment.hasPreferredDate ? 4 : currentStep);
+    const errs = validateStep(
+      currentStep === 3 && !bookingData.appointment.hasPreferredDate
+        ? 4
+        : currentStep
+    )
     // Note: your original flow sometimes jumps step 3 -> 4 depending on hasPreferredDate.
     // In case the current step is 3 but user chose "no preferred date", Step3 UI is skipped and Step4 is shown.
     // We handle validation by mapping accordingly above.
     if (Object.keys(errs).length > 0) {
-      setErrors((prev) => ({ ...prev, ...errs }));
+      setErrors((prev) => ({ ...prev, ...errs }))
       // scroll to top would be nice — left out for simplicity
-      return;
+      return
     }
     // clear step-related errors
     setErrors((prev) => {
-      const copy = { ...prev };
-      Object.keys(errs).forEach((k) => delete copy[k]);
-      return copy;
-    });
-    nextStep();
-  };
+      const copy = { ...prev }
+      Object.keys(errs).forEach((k) => delete copy[k])
+      return copy
+    })
+    nextStep()
+  }
 
   // Validate everything before final submit
   const validateAll = (): ErrorsMap => {
-    const allErrors: ErrorsMap = {};
+    const allErrors: ErrorsMap = {}
     // run through steps 1 and 4 and 3 (if hasPreferredDate)
-    Object.assign(allErrors, validateStep(1));
+    Object.assign(allErrors, validateStep(1))
     if (bookingData.appointment.hasPreferredDate) {
-      Object.assign(allErrors, validateStep(3));
+      Object.assign(allErrors, validateStep(3))
     }
-    Object.assign(allErrors, validateStep(4));
-    return allErrors;
-  };
+    Object.assign(allErrors, validateStep(4))
+    return allErrors
+  }
 
   const submitBooking = async () => {
     // validate everything before sending
-    const allErrs = validateAll();
+    const allErrs = validateAll()
     if (Object.keys(allErrs).length > 0) {
-      setErrors((prev) => ({ ...prev, ...allErrs }));
-      Alert.alert("Fehler", "Bitte korrigieren Sie die markierten Felder.");
-      return;
+      setErrors((prev) => ({ ...prev, ...allErrs }))
+      Alert.alert('Fehler', 'Bitte korrigieren Sie die markierten Felder.')
+      return
     }
 
-    setIsLoading(true);
+    setIsLoading(true)
     try {
       const payload = {
         apartmentSize: bookingData.apartmentSize,
         cleaningInterval: bookingData.cleaningInterval,
-        householdSize: Number.parseInt(bookingData.householdSize || "0"),
+        householdSize: Number.parseInt(bookingData.householdSize || '0'),
         cleaningPackage: { type: bookingData.cleaningPackage },
         specialWish: bookingData.specialWish,
         appointment: {
@@ -825,28 +859,28 @@ export default function BuchungScreen() {
         personalInfo: bookingData.personalInfo,
         price: {
           perCleaning:
-            bookingData.cleaningPackage === "executive" ? 49.2 : 75.8,
+            bookingData.cleaningPackage === 'executive' ? 49.2 : 75.8,
           total:
-            (bookingData.cleaningPackage === "executive" ? 49.2 : 75.8) * 4,
+            (bookingData.cleaningPackage === 'executive' ? 49.2 : 75.8) * 4,
         },
-      };
+      }
 
-      const res = await createBooking(payload);
+      const res = await createBooking(payload)
       if (res?.data?.success) {
-        setCurrentStep(6);
+        setCurrentStep(6)
       } else {
-        Alert.alert("Fehler", "Server hat die Buchung nicht bestätigt.");
+        Alert.alert('Fehler', 'Server hat die Buchung nicht bestätigt.')
       }
     } catch (e) {
-      console.error(e);
+      console.error(e)
       Alert.alert(
-        "Fehler",
-        "Buchung konnte nicht übermittelt werden. Bitte versuchen Sie es erneut."
-      );
+        'Fehler',
+        'Buchung konnte nicht übermittelt werden. Bitte versuchen Sie es erneut.'
+      )
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   const renderStep = () => {
     switch (currentStep) {
@@ -858,42 +892,42 @@ export default function BuchungScreen() {
             onNext={handleNext}
             errors={errors}
           />
-        );
+        )
       case 2:
         return (
           <Step2
             bookingData={bookingData}
             updateNested={updateNested}
             onPrev={() => {
-              setErrors({});
-              prevStep();
+              setErrors({})
+              prevStep()
             }}
             onNext={() => {
               // Step 2 has no required inputs (it's a radio); simply move forward
-              setErrors({});
-              nextStep();
+              setErrors({})
+              nextStep()
             }}
             errors={errors}
           />
-        );
+        )
       case 3:
         return bookingData.appointment.hasPreferredDate ? (
           <Step3_DateTime
             bookingData={bookingData}
             updateNested={updateNested}
             onPrev={() => {
-              setErrors({});
-              prevStep();
+              setErrors({})
+              prevStep()
             }}
             onNext={() => {
               // validate step 3
-              const errs = validateStep(3);
+              const errs = validateStep(3)
               if (Object.keys(errs).length > 0) {
-                setErrors((prev) => ({ ...prev, ...errs }));
-                return;
+                setErrors((prev) => ({ ...prev, ...errs }))
+                return
               }
-              setErrors({});
-              nextStep();
+              setErrors({})
+              nextStep()
             }}
             errors={errors}
           />
@@ -903,21 +937,21 @@ export default function BuchungScreen() {
             updateNested={updateNested}
             updateAddressField={updateAddressField}
             onPrev={() => {
-              setErrors({});
-              prevStep();
+              setErrors({})
+              prevStep()
             }}
             onNext={() => {
-              const errs = validateStep(4);
+              const errs = validateStep(4)
               if (Object.keys(errs).length > 0) {
-                setErrors((prev) => ({ ...prev, ...errs }));
-                return;
+                setErrors((prev) => ({ ...prev, ...errs }))
+                return
               }
-              setErrors({});
-              nextStep();
+              setErrors({})
+              nextStep()
             }}
             errors={errors}
           />
-        );
+        )
       case 4:
         return bookingData.appointment.hasPreferredDate ? (
           <Step4_Personal
@@ -925,17 +959,17 @@ export default function BuchungScreen() {
             updateNested={updateNested}
             updateAddressField={updateAddressField}
             onPrev={() => {
-              setErrors({});
-              prevStep();
+              setErrors({})
+              prevStep()
             }}
             onNext={() => {
-              const errs = validateStep(4);
+              const errs = validateStep(4)
               if (Object.keys(errs).length > 0) {
-                setErrors((prev) => ({ ...prev, ...errs }));
-                return;
+                setErrors((prev) => ({ ...prev, ...errs }))
+                return
               }
-              setErrors({});
-              nextStep();
+              setErrors({})
+              nextStep()
             }}
             errors={errors}
           />
@@ -943,27 +977,27 @@ export default function BuchungScreen() {
           <Step5_Review
             bookingData={bookingData}
             onPrev={() => {
-              setErrors({});
-              prevStep();
+              setErrors({})
+              prevStep()
             }}
             submitBooking={submitBooking}
             isLoading={isLoading}
           />
-        );
+        )
       case 5:
         return (
           <Step5_Review
             bookingData={bookingData}
             onPrev={() => {
-              setErrors({});
-              prevStep();
+              setErrors({})
+              prevStep()
             }}
             submitBooking={submitBooking}
             isLoading={isLoading}
           />
-        );
+        )
       case 6:
-        return <Step6_Success navigation={navigation} />;
+        return <Step6_Success navigation={navigation} />
       default:
         return (
           <Step1
@@ -972,70 +1006,82 @@ export default function BuchungScreen() {
             onNext={handleNext}
             errors={errors}
           />
-        );
+        )
     }
-  };
+  }
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      {currentStep < 6 && (
-        <Header
-          title="Buchungsanfrage"
-          onBack={() => {
-            if (currentStep === 1) {
-              navigation.goBack();
-            } else {
-              prevStep();
-            }
-          }}
-        />
-      )}
+      <KeyboardAwareScrollView
+        // style={styles.scrollView}
+        contentContainerStyle={styles.containerforKeyboard}
+        extraScrollHeight={0} // ⬅️ pushes input a bit more above keyboard
+        enableOnAndroid={true} // ⬅️ important for Android
+        keyboardShouldPersistTaps="handled"
+      >
+        {currentStep < 6 && (
+          <Header
+            title="Buchungsanfrage"
+            onBack={() => {
+              if (currentStep === 1) {
+                navigation.goBack()
+              } else {
+                prevStep()
+              }
+            }}
+          />
+        )}
 
-      {renderStep()}
+        {renderStep()}
+      </KeyboardAwareScrollView>
     </SafeAreaView>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: "#fff", paddingTop: 18 },
+  containerforKeyboard: {
+    flexGrow: 1,
+    justifyContent: 'center',
+  },
+  safeArea: { flex: 1, backgroundColor: '#fff', paddingTop: 18 },
   scrollView: { flex: 1 },
   container: { paddingHorizontal: 24, paddingTop: 12 },
   sectionTitle: {
     fontSize: 20,
-    fontWeight: "600",
+    fontWeight: '600',
     marginBottom: 20,
     marginTop: 20,
   },
-  description: { color: "#374151", marginBottom: 12 },
-  inputLabel: { color: "#374151", marginBottom: 8 },
+  description: { color: '#374151', marginBottom: 12 },
+  inputLabel: { color: '#374151', marginBottom: 8 },
   textInput: {
     borderWidth: 1,
-    borderColor: "#D1D5DB",
+    borderColor: '#D1D5DB',
     borderRadius: 8,
     paddingHorizontal: 12,
     paddingVertical: 10,
     marginBottom: 8,
   },
   inputErrorBorder: {
-    borderColor: "#dc2626", // red border when error
+    borderColor: '#dc2626', // red border when error
   },
-  errorText: { color: "#dc2626", marginBottom: 8 }, // red text
-  buttonRow: { flexDirection: "row", gap: 12, marginTop: 12 },
+  errorText: { color: '#dc2626', marginBottom: 8 }, // red text
+  buttonRow: { flexDirection: 'row', gap: 12, marginTop: 12 },
   primaryButton: {
     flex: 1,
-    backgroundColor: "#000",
+    backgroundColor: '#000',
     borderRadius: 8,
     paddingVertical: 14,
-    alignItems: "center",
+    alignItems: 'center',
   },
-  primaryButtonText: { color: "#fff", fontWeight: "600" },
+  primaryButtonText: { color: '#fff', fontWeight: '600' },
   secondaryButton: {
     flex: 1,
     borderWidth: 1,
-    borderColor: "#D1D5DB",
+    borderColor: '#D1D5DB',
     borderRadius: 8,
     paddingVertical: 12,
-    alignItems: "center",
+    alignItems: 'center',
   },
-  secondaryButtonText: { color: "#000", fontWeight: "600" },
-});
+  secondaryButtonText: { color: '#000', fontWeight: '600' },
+})

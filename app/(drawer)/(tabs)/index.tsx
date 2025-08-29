@@ -73,10 +73,12 @@ export default function HomeScreen() {
             imageStyle={{ borderRadius: 12 }}
           >
             <Text style={styles.bannerTitle}>Apartment cleaning service</Text>
-            <Text style={styles.bannerText}>
-              Let us clean! We take care of cleaning your apartment
-              professionally, so you&apos;ll have more time.
-            </Text>
+            <View style={{ marginRight: 18 }}>
+              <Text style={styles.bannerText}>
+                Let us clean! We take care of cleaning your apartment
+                professionally, so you&apos;ll have more time.
+              </Text>
+            </View>
             <TouchableOpacity
               onPress={() => navigation.navigate('Buchung' as never)}
               style={styles.bannerButton}
@@ -227,7 +229,12 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   bannerTitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 6 },
-  bannerText: { fontSize: 14, color: '#333', marginBottom: 12 },
+  bannerText: {
+    fontSize: 14,
+    color: '#333',
+    marginBottom: 12,
+    paddingRight: 20,
+  },
   bannerButton: {
     backgroundColor: '#111',
     paddingVertical: 10,

@@ -52,10 +52,9 @@ export default function HomeScreen() {
       <View style={styles.header}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Image
-            style={{ width: 27, height: 23, marginRight: 10 }}
-            source={require('@/assets/images/Vector.png')}
+            style={{ width: 120, height: 30 }}
+            source={require('@/assets/images/logo.png')}
           />
-          <Text style={{ fontSize: 24, fontWeight: 'bold' }}>Cleava</Text>
         </View>
         <MaterialCommunityIcons
           name="bell-ring-outline"

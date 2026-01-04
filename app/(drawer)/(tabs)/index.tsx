@@ -41,7 +41,43 @@ const servicePackages = [
       'Bügelservice',
     ],
   },
+
+  // New packages
+  {
+    title: 'CEO-Komfort-Paket',
+    subtitle: 'Cleaning Service',
+    price: '85.80€',
+    services: [
+      'Reinigung Schlafzimmer',
+      'Betten aufbereiten',
+      'Reinigung Wohnbereich',
+      'Staubwischen und Saugen der Böden',
+      'Nasswischen der Böden',
+    ],
+  },
+  {
+    title: 'CEO-Exklusiv-Paket',
+    subtitle: 'Cleaning Service',
+    price: '55.80€',
+    services: [
+      'Alle Leistungen des Komforts-Pakets',
+      'Reinigung Küche',
+      'Reinigung Bad (desinfizierend)',
+    ],
+  },
+  {
+    title: 'CEO-Premium-Paket',
+    subtitle: 'Cleaning Service',
+    price: '65.80€',
+    services: [
+      'Alle Leistungen des Exklusiv-Pakets',
+      'Bereitstellung Reinigungsmittel',
+      'Bereitstellung Verbrauchsartikel',
+      'Geschirr spülen',
+    ],
+  },
 ]
+
 
 export default function HomeScreen() {
   const navigation = useNavigation()
@@ -91,7 +127,7 @@ export default function HomeScreen() {
           <Text
             style={{ fontSize: 20, fontWeight: 'bold', paddingVertical: 10 }}
           >
-            Unser Haushaltshilfe-Service für anspruchsvolle Kunden
+            Unser Reinigungsservice für anspruchsvolle Kunden
           </Text>
 
           {/* Kompetenz */}

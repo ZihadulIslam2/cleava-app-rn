@@ -32,6 +32,83 @@ type Address = {
 
 type ErrorsMap = Record<string, string>
 
+type ServicePackage = {
+  title: string
+  subtitle: string
+  price: string
+  services: string[]
+}
+
+const servicePackages: ServicePackage[] = [
+  {
+    title: 'Executive',
+    subtitle: 'Cleaning Service',
+    price: '49.20€',
+    services: [
+      'Reinigung Schlafzimmer',
+      'Betten aufbereiten',
+      'Reinigung Wohnbereich',
+      'Reinigung Küche',
+      'Reinigung Bad (desinfizierend)',
+      'Bereitstellung Reinigungsmittel',
+    ],
+  },
+  {
+    title: 'CEO',
+    subtitle: 'Cleaning Service',
+    price: '75.80€',
+    services: [
+      'Reinigung Schlafzimmer',
+      'Betten aufbereiten',
+      'Reinigung Wohnbereich',
+      'Reinigung Küche',
+      'Reinigung Bad (desinfizierend)',
+      'Bereitstellung Reinigungsmittel',
+      'Bereitstellung Verbrauchsartikel',
+      'Geschirr spülen',
+      'Bügelservice',
+    ],
+  },
+
+  // New packages
+  {
+    title: 'CEO-Komfort-Paket',
+    subtitle: 'Cleaning Service',
+    price: '85.80€',
+    services: [
+      'Reinigung Schlafzimmer',
+      'Betten aufbereiten',
+      'Reinigung Wohnbereich',
+      'Staubwischen und Saugen der Böden',
+      'Nasswischen der Böden',
+    ],
+  },
+  {
+    title: 'CEO-Exklusiv-Paket',
+    subtitle: 'Cleaning Service',
+    price: '55.80€',
+    services: [
+      'Alle Leistungen des Komforts-Pakets',
+      'Reinigung Küche',
+      'Reinigung Bad (desinfizierend)',
+    ],
+  },
+  {
+    title: 'CEO-Premium-Paket',
+    subtitle: 'Cleaning Service',
+    price: '65.80€',
+    services: [
+      'Alle Leistungen des Exklusiv-Pakets',
+      'Bereitstellung Reinigungsmittel',
+      'Bereitstellung Verbrauchsartikel',
+      'Geschirr spülen',
+    ],
+  },
+]
+
+const parsePackagePrice = (price: string) =>
+  Number.parseFloat(price.replace(/[^\d.]/g, ''))
+
 /* ----------------------
    Step components
    - Each step receives an `errors` prop and uses `onNext`/`onPrev`
@@ -74,7 +151,7 @@ const Step1 = ({
         </Text>
 
         <Text style={styles.sectionTitle}>
-          Appartement und Reinigungsintervall
+          Apartment und Wohnungsreinigung|
         </Text>
 
         <Text style={styles.inputLabel}>Appartement-Größe</Text>
@@ -121,35 +198,15 @@ const Step1 = ({
         )}
 
         <Text style={styles.sectionTitle}>Cleaning Service Paket</Text>
-        <PackageOption
-          title="Executive Cleaning Service"
-          items={[
-            'Reinigung Schlafzimmer',
-            'Betten aufbereiten',
-            'Reinigung Wohnbereich',
-            'Reinigung Küche',
-            'Reinigung Bad (desinfizierend)',
-            'Bereitstellung Reinigungsmittel',
-          ]}
-          selected={bookingData.cleaningPackage === 'executive'}
-          onPress={() => updateField('cleaningPackage', 'executive')}
-        />
-        <PackageOption
-          title="CEO Cleaning Service"
-          items={[
-            'Reinigung Schlafzimmer',
-            'Betten aufbereiten',
-            'Reinigung Wohnbereich',
-            'Reinigung Küche',
-            'Reinigung Bad (desinfizierend)',
-            'Bereitstellung Reinigungsmittel',
-            'Bereitstellung Verbrauchsartikel',
-            'Geschirr spülen',
-            'Bügelservice',
-          ]}
-          selected={bookingData.cleaningPackage === 'ceo'}
-          onPress={() => updateField('cleaningPackage', 'ceo')}
-        />
+        {servicePackages.map((pkg) => (
+          <PackageOption
+            key={pkg.title}
+            title={`${pkg.title} (${pkg.price})`}
+            items={pkg.services}
+            selected={bookingData.cleaningPackage === pkg.title}
+            onPress={() => updateField('cleaningPackage', pkg.title)}
+          />
+        ))}
         {errors['cleaningPackage'] && (
           <Text style={styles.errorText}>{errors['cleaningPackage']}</Text>
         )}
@@ -900,6 +957,13 @@ export default function BuchungScreen() {
   }
 
   const submitBooking = async () => {
+    const selectedPackage = servicePackages.find(
+      (pkg) => pkg.title === bookingData.cleaningPackage
+    )
+    const pricePerCleaning = selectedPackage
+      ? parsePackagePrice(selectedPackage.price)
+      : 0
+
     // validate everything before sending
     const allErrs = validateAll()
     if (Object.keys(allErrs).length > 0) {
@@ -923,10 +987,8 @@ export default function BuchungScreen() {
         },
         personalInfo: bookingData.personalInfo,
         price: {
-          perCleaning:
-            bookingData.cleaningPackage === 'executive' ? 49.2 : 75.8,
-          total:
-            (bookingData.cleaningPackage === 'executive' ? 49.2 : 75.8) * 4,
+          perCleaning: pricePerCleaning,
+          total: pricePerCleaning * 4,
         },
       }
 
@@ -1179,3 +1241,4 @@ const styles = StyleSheet.create({
   },
   secondaryButtonText: { color: '#000', fontWeight: '600' },
 })
+

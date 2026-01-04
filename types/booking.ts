@@ -26,7 +26,7 @@ export interface BookingData {
   apartmentSize: string;
   cleaningInterval: string;
   householdSize: string;
-  cleaningPackage: 'executive' | 'ceo' | '';
+  cleaningPackage: string;
   specialWish: string;
   appointment: Appointment;
   personalInfo: PersonalInfo;

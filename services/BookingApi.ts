@@ -12,12 +12,17 @@ const resolveApiBase = (): string => {
   const raw = (API_BASE || '').trim()
   if (!raw) return ''
 
+  // Accept values like "localhost:5001" by defaulting to http.
+  const normalizedRaw = /^[a-zA-Z][a-zA-Z\d+\-.]*:\/\//.test(raw)
+    ? raw
+    : `http://${raw}`
+
   try {
-    const parsed = new URL(raw)
+    const parsed = new URL(normalizedRaw)
     const isLocalhost =
       parsed.hostname === 'localhost' || parsed.hostname === '127.0.0.1'
 
-    if (!isLocalhost) return raw
+    if (!isLocalhost) return normalizedRaw
 
     const expoHostUri = Constants.expoConfig?.hostUri
     const expoHost = expoHostUri?.split(':')[0]
@@ -30,9 +35,9 @@ const resolveApiBase = (): string => {
       return `${parsed.protocol}//10.0.2.2:${parsed.port || '5001'}`
     }
 
-    return raw
+    return normalizedRaw
   } catch {
-    return raw
+    return normalizedRaw
   }
 }
 

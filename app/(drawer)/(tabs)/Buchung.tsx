@@ -1,4 +1,4 @@
-// BuchungScreen.tsx
+﻿// BuchungScreen.tsx
 import Header from '@/components/Header'
 import PackageOption from '@/components/PackageOption'
 import RadioOption from '@/components/RadioOption'
@@ -7,7 +7,7 @@ import { BookingData } from '@/types/booking'
 import DateTimePicker from '@react-native-community/datetimepicker'
 import { Picker } from '@react-native-picker/picker'
 import { useNavigation } from '@react-navigation/native'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import {
   Alert,
   KeyboardAvoidingView,
@@ -39,16 +39,18 @@ type ServicePackage = {
   services: string[]
 }
 
+type BackendCleaningPackageType = 'executive' | 'ceo'
+
 const servicePackages: ServicePackage[] = [
   {
     title: 'Executive',
     subtitle: 'Cleaning Service',
-    price: '49.20€',
+    price: '49.20â‚¬',
     services: [
       'Reinigung Schlafzimmer',
       'Betten aufbereiten',
       'Reinigung Wohnbereich',
-      'Reinigung Küche',
+      'Reinigung KÃ¼che',
       'Reinigung Bad (desinfizierend)',
       'Bereitstellung Reinigungsmittel',
     ],
@@ -56,17 +58,17 @@ const servicePackages: ServicePackage[] = [
   {
     title: 'CEO',
     subtitle: 'Cleaning Service',
-    price: '75.80€',
+    price: '75.80â‚¬',
     services: [
       'Reinigung Schlafzimmer',
       'Betten aufbereiten',
       'Reinigung Wohnbereich',
-      'Reinigung Küche',
+      'Reinigung KÃ¼che',
       'Reinigung Bad (desinfizierend)',
       'Bereitstellung Reinigungsmittel',
       'Bereitstellung Verbrauchsartikel',
-      'Geschirr spülen',
-      'Bügelservice',
+      'Geschirr spÃ¼len',
+      'BÃ¼gelservice',
     ],
   },
 
@@ -74,40 +76,85 @@ const servicePackages: ServicePackage[] = [
   {
     title: 'CEO-Komfort-Paket',
     subtitle: 'Cleaning Service',
-    price: '85.80€',
+    price: '87.80â‚¬',
     services: [
       'Reinigung Schlafzimmer',
       'Betten aufbereiten',
       'Reinigung Wohnbereich',
-      'Staubwischen und Saugen der Böden',
-      'Nasswischen der Böden',
+      'Staubwischen und Saugen der BÃ¶den',
+      'Nasswischen der BÃ¶den',
     ],
   },
   {
     title: 'CEO-Exklusiv-Paket',
     subtitle: 'Cleaning Service',
-    price: '55.80€',
+    price: '54.80â‚¬',
     services: [
       'Alle Leistungen des Komforts-Pakets',
-      'Reinigung Küche',
+      'Reinigung KÃ¼che',
       'Reinigung Bad (desinfizierend)',
     ],
   },
   {
     title: 'CEO-Premium-Paket',
     subtitle: 'Cleaning Service',
-    price: '65.80€',
+    price: '60â‚¬',
     services: [
       'Alle Leistungen des Exklusiv-Pakets',
       'Bereitstellung Reinigungsmittel',
       'Bereitstellung Verbrauchsartikel',
-      'Geschirr spülen',
+      'Geschirr spÃ¼len',
     ],
   },
 ]
 
 const parsePackagePrice = (price: string) =>
   Number.parseFloat(price.replace(/[^\d.]/g, ''))
+
+type PriceEstimate = {
+  perCleaning: number
+  monthlyTotal: number
+  cleaningsPerMonth: number
+}
+
+const parseApartmentSize = (input: string): number => {
+  const cleaned = (input || '').replace(',', '.').replace(/[^\d.]/g, '')
+  const parsed = Number.parseFloat(cleaned)
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : 0
+}
+
+const parseCleaningsPerMonth = (interval: string): number => {
+  const value = (interval || '').trim().toLowerCase()
+  if (!value) return 4
+
+  const monthlyMatch = value.match(/(\d+)\s*x?\s*\/?\s*monat/)
+  if (monthlyMatch?.[1]) {
+    return Math.max(1, Number.parseInt(monthlyMatch[1], 10))
+  }
+
+  const weeklyMatch = value.match(/(\d+)\s*x?\s*\/?\s*woche/)
+  if (weeklyMatch?.[1]) {
+    return Math.max(1, Number.parseInt(weeklyMatch[1], 10)) * 4
+  }
+
+  return 4
+}
+
+const formatCurrencyEUR = (amount: number): string =>
+  new Intl.NumberFormat('de-DE', {
+    style: 'currency',
+    currency: 'EUR',
+  }).format(Number.isFinite(amount) ? amount : 0)
+
+const mapToBackendPackageType = (
+  packageTitle: string
+): BackendCleaningPackageType | null => {
+  const normalized = (packageTitle || '').trim().toLowerCase()
+  if (!normalized) return null
+  if (normalized.startsWith('executive')) return 'executive'
+  if (normalized.startsWith('ceo')) return 'ceo'
+  return null
+}
 
 /* ----------------------
    Step components
@@ -120,11 +167,13 @@ const Step1 = ({
   updateField,
   onNext,
   errors,
+  priceEstimate,
 }: {
   bookingData: BookingData
   updateField: (field: keyof BookingData, value: any) => void
   onNext: () => void
   errors: ErrorsMap
+  priceEstimate: PriceEstimate
 }) => (
   <KeyboardAvoidingView
     style={{ flex: 1 }}
@@ -138,29 +187,30 @@ const Step1 = ({
       <View style={styles.container}>
         <Text style={styles.sectionTitle}>Reinigung</Text>
         <Text style={styles.description}>
-          Die benötigte Zeit zum Reinigen Ihres Appartements orientiert sich an
-          Ihrer Wohnfläche. Geben Sie uns bitte zudem an, wie oft wir Ihr
+          Die benÃ¶tigte Zeit zum Reinigen Ihres Appartements orientiert sich an
+          Ihrer WohnflÃ¤che. Geben Sie uns bitte zudem an, wie oft wir Ihr
           Appartement im Monat reinigen und welche Extras Sie dazubuchen
-          möchten.
+          mÃ¶chten.
         </Text>
         <Text style={styles.inputLabel}>
-          AppClean ist in folgenden Städten verfügbar:
+          AppClean ist in folgenden StÃ¤dten verfÃ¼gbar:
         </Text>
         <Text style={styles.inputLabel}>
-          Berlin, Frankfurt, Hamburg, München, Nürnberg, Stuttgart
+          Berlin, Frankfurt, Hamburg, MÃ¼nchen, NÃ¼rnberg, Stuttgart
         </Text>
 
         <Text style={styles.sectionTitle}>
           Apartment und Wohnungsreinigung|
         </Text>
 
-        <Text style={styles.inputLabel}>Appartement-Größe</Text>
+        <Text style={styles.inputLabel}>Appartement-Groesse (m2)</Text>
         <TextInput
           style={[
             styles.textInput,
             errors['apartmentSize'] ? styles.inputErrorBorder : null,
           ]}
-          placeholder="Wohnungsgröße"
+          placeholder="WohnungsgrÃ¶ÃŸe"
+          keyboardType="numeric"
           value={bookingData.apartmentSize}
           onChangeText={(v) => updateField('apartmentSize', v)}
         />
@@ -211,7 +261,20 @@ const Step1 = ({
           <Text style={styles.errorText}>{errors['cleaningPackage']}</Text>
         )}
 
-        <Text style={styles.inputLabel}>Besondere Wünsche</Text>
+        <View style={styles.priceCalculatorBox}>
+          <Text style={styles.priceCalculatorTitle}>Preisrechner</Text>
+          <Text style={styles.priceCalculatorLine}>
+            Pro Reinigung: {formatCurrencyEUR(priceEstimate.perCleaning)}
+          </Text>
+          <Text style={styles.priceCalculatorLine}>
+            Reinigungen/Monat: {priceEstimate.cleaningsPerMonth}
+          </Text>
+          <Text style={styles.priceCalculatorTotal}>
+            Gesamt/Monat: {formatCurrencyEUR(priceEstimate.monthlyTotal)}
+          </Text>
+        </View>
+
+        <Text style={styles.inputLabel}>Besondere WÃ¼nsche</Text>
         <TextInput
           style={[styles.textInput, { height: 90 }]}
           placeholder="Schreiben Sie hier..."
@@ -224,7 +287,7 @@ const Step1 = ({
           style={[styles.primaryButton, { marginBottom: 30 }]}
           onPress={onNext}
         >
-          <Text style={styles.primaryButtonText}>Bestätigen</Text>
+          <Text style={styles.primaryButtonText}>BestÃ¤tigen</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
@@ -270,7 +333,7 @@ const Step2 = ({
         {/* no field errors here usually */}
         <View style={styles.buttonRow}>
           <TouchableOpacity style={styles.secondaryButton} onPress={onPrev}>
-            <Text style={styles.secondaryButtonText}>Zurück</Text>
+            <Text style={styles.secondaryButtonText}>ZurÃ¼ck</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.primaryButton} onPress={onNext}>
             <Text style={styles.primaryButtonText}>Weiter</Text>
@@ -339,7 +402,7 @@ const Step3_DateTime = ({
             onPress={() => setShowDatePicker(true)}
           >
             <Text style={{ color: 'gray' }}>
-              {bookingData.appointment.preferredDate || 'YYYY-MM-DD auswählen'}
+              {bookingData.appointment.preferredDate || 'YYYY-MM-DD auswÃ¤hlen'}
             </Text>
           </TouchableOpacity>
           {errors['appointment.preferredDate'] && (
@@ -372,7 +435,7 @@ const Step3_DateTime = ({
             onPress={() => setShowTimePicker(true)}
           >
             <Text style={{ color: 'gray' }}>
-              {bookingData.appointment.preferredTime || 'HH:mm auswählen'}
+              {bookingData.appointment.preferredTime || 'HH:mm auswÃ¤hlen'}
             </Text>
           </TouchableOpacity>
           {errors['appointment.preferredTime'] && (
@@ -393,7 +456,7 @@ const Step3_DateTime = ({
           {/* Navigation Buttons */}
           <View style={styles.buttonRow}>
             <TouchableOpacity style={styles.secondaryButton} onPress={onPrev}>
-              <Text style={styles.secondaryButtonText}>Zurück</Text>
+              <Text style={styles.secondaryButtonText}>ZurÃ¼ck</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.primaryButton} onPress={onNext}>
               <Text style={styles.primaryButtonText}>Weiter</Text>
@@ -430,13 +493,13 @@ const Step4_Personal = ({
       contentContainerStyle={{ paddingBottom: 70 }}
     >
       <View style={styles.container}>
-        <Text style={styles.sectionTitle}>Persönliches</Text>
+        <Text style={styles.sectionTitle}>PersÃ¶nliches</Text>
         <Text style={styles.description}>
-          Teilen Sie uns bitte Ihre persönlichen Daten mit und wann wir Sie am
-          Besten erreichen können.
+          Teilen Sie uns bitte Ihre persÃ¶nlichen Daten mit und wann wir Sie am
+          Besten erreichen kÃ¶nnen.
         </Text>
 
-        <Text style={styles.sectionTitle}>Persönliche Daten</Text>
+        <Text style={styles.sectionTitle}>PersÃ¶nliche Daten</Text>
         <Text style={styles.inputLabel}>Anrede</Text>
         <View style={styles.pickerContainer}>
           <Picker
@@ -553,7 +616,7 @@ const Step4_Personal = ({
               ? styles.inputErrorBorder
               : null,
           ]}
-          placeholder="Straße"
+          placeholder="StraÃŸe"
           value={bookingData.personalInfo.address.street}
           onChangeText={(v) => updateAddressField('street', v)}
         />
@@ -586,12 +649,12 @@ const Step4_Personal = ({
         <Text style={styles.description}>
           Wurden Sie durch Ihren Arbeitgeber auf Appclean aufmerksam, haben Sie
           uns in einer Werbung wahrgenommen oder wurden wir empfohlen? Wir
-          freuen uns über eine Info hierzu!
+          freuen uns Ã¼ber eine Info hierzu!
         </Text>
 
         <View style={styles.buttonRow}>
           <TouchableOpacity style={styles.secondaryButton} onPress={onPrev}>
-            <Text style={styles.secondaryButtonText}>Zurück</Text>
+            <Text style={styles.secondaryButtonText}>ZurÃ¼ck</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.primaryButton} onPress={onNext}>
             <Text style={styles.primaryButtonText}>Weiter</Text>
@@ -604,11 +667,13 @@ const Step4_Personal = ({
 
 const Step5_Review = ({
   bookingData,
+  priceEstimate,
   onPrev,
   submitBooking,
   isLoading,
 }: {
   bookingData: BookingData
+  priceEstimate: PriceEstimate
   onPrev: () => void
   submitBooking: () => void
   isLoading: boolean
@@ -623,9 +688,9 @@ const Step5_Review = ({
       contentContainerStyle={{ paddingBottom: 40 }}
     >
       <View style={styles.container}>
-        <Text style={styles.sectionTitle}>Bestätigung</Text>
+        <Text style={styles.sectionTitle}>BestÃ¤tigung</Text>
         <Text style={styles.description}>
-          Bitte prüfen Sie Ihre Daten und senden Sie die Anfrage ab.
+          Bitte prÃ¼fen Sie Ihre Daten und senden Sie die Anfrage ab.
         </Text>
 
         <Text style={styles.sectionTitle}>Reinigung</Text>
@@ -633,6 +698,8 @@ const Step5_Review = ({
         <Text>Interval: {bookingData.cleaningInterval}</Text>
         <Text>Persons: {bookingData.householdSize}</Text>
         <Text>Package: {bookingData.cleaningPackage}</Text>
+        <Text>Price/Cleaning: {formatCurrencyEUR(priceEstimate.perCleaning)}</Text>
+        <Text>Monthly Total: {formatCurrencyEUR(priceEstimate.monthlyTotal)}</Text>
 
         <Text style={[styles.sectionTitle, { marginTop: 12 }]}>Termin</Text>
         <Text>
@@ -647,7 +714,7 @@ const Step5_Review = ({
         )}
 
         <Text style={[styles.sectionTitle, { marginTop: 12 }]}>
-          Persönliches
+          PersÃ¶nliches
         </Text>
 
         <Text>
@@ -695,7 +762,7 @@ const Step6_Success = ({ navigation }: { navigation: any }) => (
         marginBottom: 16,
       }}
     >
-      Vielen Dank für Ihre Buchungsanfrage!
+      Vielen Dank fÃ¼r Ihre Buchungsanfrage!
     </Text>
 
     <Text
@@ -707,9 +774,9 @@ const Step6_Success = ({ navigation }: { navigation: any }) => (
         lineHeight: 22,
       }}
     >
-      Ihre Daten wurden an uns übermittelt und werden jetzt bearbeitet. Eine
-      Bestätigung Ihrer Buchung, sowie weitere Informationen werden Ihnen in
-      Kürze zugeschickt.
+      Ihre Daten wurden an uns Ã¼bermittelt und werden jetzt bearbeitet. Eine
+      BestÃ¤tigung Ihrer Buchung, sowie weitere Informationen werden Ihnen in
+      KÃ¼rze zugeschickt.
     </Text>
 
     <TouchableOpacity
@@ -728,7 +795,7 @@ const Step6_Success = ({ navigation }: { navigation: any }) => (
       }}
     >
       <Text style={{ color: '#FFFFFF', fontSize: 16, fontWeight: '600' }}>
-        Zurück zur Startseite
+        ZurÃ¼ck zur Startseite
       </Text>
     </TouchableOpacity>
   </View>
@@ -816,6 +883,32 @@ export default function BuchungScreen() {
   const nextStep = () => setCurrentStep((s) => Math.min(6, s + 1))
   const prevStep = () => setCurrentStep((s) => Math.max(1, s - 1))
 
+  const priceEstimate = useMemo<PriceEstimate>(() => {
+    const selectedPackage = servicePackages.find(
+      (pkg) => pkg.title === bookingData.cleaningPackage
+    )
+    const packageBasePrice = selectedPackage
+      ? parsePackagePrice(selectedPackage.price)
+      : 0
+    const apartmentSizeSqm = parseApartmentSize(bookingData.apartmentSize)
+    const cleaningsPerMonth = parseCleaningsPerMonth(bookingData.cleaningInterval)
+
+    // Package base price is treated as the 50m2 reference.
+    const sizeMultiplier = apartmentSizeSqm > 0 ? apartmentSizeSqm / 50 : 0
+    const perCleaning = Number((packageBasePrice * sizeMultiplier).toFixed(2))
+    const monthlyTotal = Number((perCleaning * cleaningsPerMonth).toFixed(2))
+
+    return {
+      perCleaning,
+      monthlyTotal,
+      cleaningsPerMonth,
+    }
+  }, [
+    bookingData.apartmentSize,
+    bookingData.cleaningInterval,
+    bookingData.cleaningPackage,
+  ])
+
   /* ----------------------
      Validation helpers
      - validation messages in German
@@ -832,7 +925,7 @@ export default function BuchungScreen() {
         !bookingData.apartmentSize ||
         bookingData.apartmentSize.trim() === ''
       ) {
-        e['apartmentSize'] = 'Bitte Wohnungsgröße angeben.'
+        e['apartmentSize'] = 'Bitte WohnungsgrÃ¶ÃŸe angeben.'
       }
       if (
         !bookingData.cleaningInterval ||
@@ -846,22 +939,22 @@ export default function BuchungScreen() {
       ) {
         e['householdSize'] = 'Bitte Anzahl Personen angeben.'
       } else if (!/^\d+$/.test(bookingData.householdSize.trim())) {
-        e['householdSize'] = 'Bitte eine gültige Zahl eingeben.'
+        e['householdSize'] = 'Bitte eine gÃ¼ltige Zahl eingeben.'
       } else if (parseInt(bookingData.householdSize, 10) <= 0) {
-        e['householdSize'] = 'Anzahl Personen muss größer als 0 sein.'
+        e['householdSize'] = 'Anzahl Personen muss grÃ¶ÃŸer als 0 sein.'
       }
       if (!bookingData.cleaningPackage) {
-        e['cleaningPackage'] = 'Bitte ein Paket auswählen.'
+        e['cleaningPackage'] = 'Bitte ein Paket auswÃ¤hlen.'
       }
     }
 
     if (step === 3) {
       if (bookingData.appointment.hasPreferredDate) {
         if (!bookingData.appointment.preferredDate) {
-          e['appointment.preferredDate'] = 'Bitte Datum auswählen.'
+          e['appointment.preferredDate'] = 'Bitte Datum auswÃ¤hlen.'
         }
         if (!bookingData.appointment.preferredTime) {
-          e['appointment.preferredTime'] = 'Bitte Uhrzeit auswählen.'
+          e['appointment.preferredTime'] = 'Bitte Uhrzeit auswÃ¤hlen.'
         }
       }
     }
@@ -886,7 +979,7 @@ export default function BuchungScreen() {
         e['personalInfo.phone'] = 'Bitte Telefonnummer angeben.'
       }
       if (!isValidEmail(bookingData.personalInfo.email)) {
-        e['personalInfo.email'] = 'Bitte gültige E-Mail-Adresse angeben.'
+        e['personalInfo.email'] = 'Bitte gÃ¼ltige E-Mail-Adresse angeben.'
       }
       // address
       if (
@@ -905,7 +998,7 @@ export default function BuchungScreen() {
         !bookingData.personalInfo.address.street ||
         bookingData.personalInfo.address.street.trim() === ''
       ) {
-        e['personalInfo.address.street'] = 'Bitte Straße angeben.'
+        e['personalInfo.address.street'] = 'Bitte StraÃŸe angeben.'
       }
       if (
         !bookingData.personalInfo.address.city ||
@@ -932,7 +1025,7 @@ export default function BuchungScreen() {
     // We handle validation by mapping accordingly above.
     if (Object.keys(errs).length > 0) {
       setErrors((prev) => ({ ...prev, ...errs }))
-      // scroll to top would be nice — left out for simplicity
+      // scroll to top would be nice â€” left out for simplicity
       return
     }
     // clear step-related errors
@@ -957,12 +1050,14 @@ export default function BuchungScreen() {
   }
 
   const submitBooking = async () => {
-    const selectedPackage = servicePackages.find(
-      (pkg) => pkg.title === bookingData.cleaningPackage
+    const backendPackageType = mapToBackendPackageType(
+      bookingData.cleaningPackage
     )
-    const pricePerCleaning = selectedPackage
-      ? parsePackagePrice(selectedPackage.price)
-      : 0
+
+    if (!backendPackageType) {
+      Alert.alert('Fehler', 'Ungültiges Reinigungspaket ausgewählt.')
+      return
+    }
 
     // validate everything before sending
     const allErrs = validateAll()
@@ -978,7 +1073,7 @@ export default function BuchungScreen() {
         apartmentSize: bookingData.apartmentSize,
         cleaningInterval: bookingData.cleaningInterval,
         householdSize: Number.parseInt(bookingData.householdSize || '0'),
-        cleaningPackage: { type: bookingData.cleaningPackage },
+        cleaningPackage: { type: backendPackageType },
         specialWish: bookingData.specialWish,
         appointment: {
           hasPreferredDate: bookingData.appointment.hasPreferredDate,
@@ -987,8 +1082,8 @@ export default function BuchungScreen() {
         },
         personalInfo: bookingData.personalInfo,
         price: {
-          perCleaning: pricePerCleaning,
-          total: pricePerCleaning * 4,
+          perCleaning: priceEstimate.perCleaning,
+          total: priceEstimate.monthlyTotal,
         },
       }
 
@@ -996,14 +1091,13 @@ export default function BuchungScreen() {
       if (res?.data?.success) {
         setCurrentStep(6)
       } else {
-        Alert.alert('Fehler', 'Server hat die Buchung nicht bestätigt.')
+        Alert.alert('Fehler', 'Server hat die Buchung nicht bestÃ¤tigt.')
       }
-    } catch (e) {
+    } catch (e: any) {
       console.error(e)
-      Alert.alert(
-        'Fehler',
+      const fallbackMessage =
         'Buchung konnte nicht übermittelt werden. Bitte versuchen Sie es erneut.'
-      )
+      Alert.alert('Fehler', e?.message || fallbackMessage)
     } finally {
       setIsLoading(false)
     }
@@ -1018,6 +1112,7 @@ export default function BuchungScreen() {
             updateField={updateField}
             onNext={handleNext}
             errors={errors}
+            priceEstimate={priceEstimate}
           />
         )
       case 2:
@@ -1103,6 +1198,7 @@ export default function BuchungScreen() {
         ) : (
           <Step5_Review
             bookingData={bookingData}
+            priceEstimate={priceEstimate}
             onPrev={() => {
               setErrors({})
               prevStep()
@@ -1115,6 +1211,7 @@ export default function BuchungScreen() {
         return (
           <Step5_Review
             bookingData={bookingData}
+            priceEstimate={priceEstimate}
             onPrev={() => {
               setErrors({})
               prevStep()
@@ -1132,6 +1229,7 @@ export default function BuchungScreen() {
             updateField={updateField}
             onNext={handleNext}
             errors={errors}
+            priceEstimate={priceEstimate}
           />
         )
     }
@@ -1142,8 +1240,8 @@ export default function BuchungScreen() {
       <KeyboardAwareScrollView
         // style={styles.scrollView}
         contentContainerStyle={styles.containerforKeyboard}
-        extraScrollHeight={0} // ⬅️ pushes input a bit more above keyboard
-        enableOnAndroid={true} // ⬅️ important for Android
+        extraScrollHeight={0} // â¬…ï¸ pushes input a bit more above keyboard
+        enableOnAndroid={true} // â¬…ï¸ important for Android
         keyboardShouldPersistTaps="handled"
       >
         {currentStep < 6 && (
@@ -1214,6 +1312,28 @@ const styles = StyleSheet.create({
     borderColor: '#dc2626', // red border when error
   },
   errorText: { color: '#dc2626', marginBottom: 8 }, // red text
+  priceCalculatorBox: {
+    backgroundColor: '#F3F4F6',
+    borderRadius: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 12,
+    marginBottom: 14,
+  },
+  priceCalculatorTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    marginBottom: 6,
+    color: '#111827',
+  },
+  priceCalculatorLine: {
+    color: '#374151',
+    marginBottom: 2,
+  },
+  priceCalculatorTotal: {
+    marginTop: 4,
+    color: '#111827',
+    fontWeight: '700',
+  },
   buttonRow: { flexDirection: 'row', gap: 12, marginTop: 12 },
   primaryButton: {
     flex: 1,
@@ -1241,4 +1361,8 @@ const styles = StyleSheet.create({
   },
   secondaryButtonText: { color: '#000', fontWeight: '600' },
 })
+
+
+
+
 

@@ -89,7 +89,7 @@ export default function HomeScreen() {
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Image
             style={{ width: 120, height: 30 }}
-            source={require('@/assets/images/logo.png')}
+            source={require('@/assets/images/logo1.png')}
           />
         </View>
         <MaterialCommunityIcons
